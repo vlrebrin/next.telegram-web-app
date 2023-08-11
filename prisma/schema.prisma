@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int    @id @default(autoincrement())
+  tg_id Int    @default(0)
+  name  String @unique
+  jsondata  String @default("NO JSON DATA")
+}
+
+model Counter {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  num       String   
+  value     Int
+  check    Checks @relation(fields: [checkId], references: [id])
+  checkId   Int // relation scalar field  (used in the `@relation` attribute above)
+} 
+
+model Checks{
+  id        Int      @id @default(autoincrement())
+  summa     Float     @default(12000.2)
+  value     Int       @default(22214)
+  closed    Boolean   @default(true)
+  createdAt DateTime @default(now())
+  counters  Counter[]
+}

@@ -2,14 +2,17 @@
   "name": "next.telegram-web-app",
   "version": "0.1.0",
   "private": true,
+  "type": "ReferenceError",
   "scripts": {
+    "seed": "node prisma/seed.js",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@types/node": "20.3.1",
+    "-": "^0.0.1",
+    "@prisma/client": "^5.0.0",
     "@types/react": "18.2.12",
     "@types/react-dom": "18.2.5",
     "autoprefixer": "10.4.14",
@@ -19,8 +22,15 @@
     "postcss": "8.4.24",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "semantic-ui-css": "^2.5.0",
+    "semantic-ui-react": "^2.1.4",
     "tailwindcss": "3.3.2",
-    "telegram-webapps-types": "^1.0.5",
-    "typescript": "5.1.3"
+    "telegram-webapps-types": "^1.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.5",
+    "prisma": "^5.0.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
   }
 }
