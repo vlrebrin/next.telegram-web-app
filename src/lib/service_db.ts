@@ -1,25 +1,128 @@
-import { Checks } from "@prisma/client";
+import { Check, Prisma, User, Metering} from "@prisma/client";
 import { prisma } from "./prisma";
+import Counter from "@/app/counters/page";
+import { members } from "@/lib/conf-data";
+import {
+  apiCreateUser,
+  apiGetUsers,
+} from "@/api-requests";
 
-interface TodoFiler {
-  page?: number;
-  limit?: number;
-}
-
-export async function createCheck(summ: number, value: number ) {
-  try {
-    const check = await prisma.checks.create({
-      data: {
-        summa: summ,
-        value: value
-      }
+export async function createUsers() {
+  members.map(member => {
+    const dataUser = JSON.stringify({
+      name: member.name,
+      jsondata: JSON.stringify(member)
     })
-    return { check }
-
-  } catch (error) {
-    return { error };
-  }
+    const user = apiCreateUser(dataUser)
+  })
 }
+export async function getUsers() { 
+  const users = await apiGetUsers(1, 20)
+  return users as User[]
+}
+
+
+
+
+
+// interface TodoFiler {
+//   page?: number;
+//   limit?: number;
+// }
+
+// export async function createCheck(summ: number, value: number ) {
+//   try {
+//     const check = await prisma.check.create({
+//       data: {
+//         summa: summ,
+//         value: value
+//       }
+//     })
+//     return { check }
+
+//   } catch (error) {
+//     return { error };
+//   }
+// }
+
+// export async function getUsers() {
+//   try {
+//     const users:User[] = await prisma.user.findMany({
+//       orderBy: { id: 'asc' }
+//     })
+//     return { users }
+//   } catch (error) {
+//     return { error }
+//   }
+// }
+
+// export async function getUser() {
+//   try {
+//     const users = await prisma.user.findMany({
+//       orderBy: { id: 'asc' }
+//     })
+//     return { users }
+//   } catch (error) {
+//     return { error }
+//   }
+// }
+
+// export async function createCounter({
+//   checkId,
+//   userId,
+//     num,
+//     value }:{
+//     checkId: number,
+//     userId: number,
+//     num: string,
+//     value: number
+//   })
+// {
+//   try {
+//     const counter = await prisma.metering.create({
+//      data:{
+//         num:num,
+//         value: value,
+//         checkId: checkId,
+//         userId
+//       }
+//     })
+//     return { counter }
+//   } catch (error) {
+//     return { error }
+//   }
+// }
+
+// export async function getCounter({ user, check }: { user: User, check: Check }) {
+//   try{
+//   const data = await prisma.metering.findMany({
+//     where: {
+//         userId: user.id,
+//         checkId: check.id
+//     }
+//   })
+//   return { data }
+// } catch (error) {
+//   return { error }
+// }}
+
+// export async function createUser({
+//   name,
+//   jsondata
+// }:{name: string, jsondata: string })
+//   {
+//   try {
+//     const user = await prisma.user.create({
+//       data: {
+//         name: name,
+//         jsondata: jsondata
+//       }
+//     })
+//     return { user }
+//   } catch (error) {
+//     return { error }
+//   }
+// }
 
 // export async function getTodos(filter: TodoFiler = {}) {
 //   try {

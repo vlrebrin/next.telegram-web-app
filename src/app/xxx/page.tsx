@@ -1,42 +1,45 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
 import { useTelegram } from '../telegram.provider'
+import CounterForm from "@/components/Counter"
+import prisma, { User } from "@prisma/client"
+import { getAllUsers } from "@/app/_action"
+import { useTransition } from 'react'
+import { usePathname, useRouter } from "next/navigation";
 
-export default function Home() {
-  const [counter, setCounter] = useState<number>(0)
+export default function Counters() {
+  const path = usePathname()
+  let [, startTransition] = useTransition()
+const d= startTransition(()=> getAllUsers(path))
+//const usrs=getAllUsers()
+
+  const [counter, setCounter] = useState<number>(2555)
+  //const [users, setUsers]= useState<prisma.Users[]>(getAllUsers() as Users[])
   const telegram = useTelegram()
 
-  const handleMainButtonClick = useCallback(() => {
-    // telegram.sendData(JSON.stringify({ counter }))
-    telegram.showAlert(`You clicked ${counter} times!`)
-  }, [counter])
+  // const handleMainButtonClick = useCallback(() => {
+  //   // telegram.sendData(JSON.stringify({ counter }))
+  //   telegram.showAlert(`You clicked ${counter} times!`)
+  // }, [counter])
 
-  useEffect(() => {
-    telegram.MainButton.setParams({
-      text: 'CLICK ON ME',
-      is_active: true,
-      is_visible: true
-    })
-  }, [])
+  // useEffect(() => {
+  //   telegram.MainButton.setParams({
+  //     text: 'CLICK ON ME',
+  //     is_active: true,
+  //     is_visible: true
+  //   })
+  // }, [])
 
-  useEffect(() => {
-    telegram.onEvent('mainButtonClicked', handleMainButtonClick)
-    return () => telegram.offEvent('mainButtonClicked', handleMainButtonClick)
-  }, [handleMainButtonClick])
+
+
+  // useEffect(() => {
+  //   telegram.onEvent('mainButtonClicked', handleMainButtonClick)
+  //   return () => telegram.offEvent('mainButtonClicked', handleMainButtonClick)
+  // }, [handleMainButtonClick])
 
   return (
     <>
-      <h2 className="text-2xl font-bold">Hello, {telegram.initDataUnsafe?.user?.first_name || 'user'}</h2>
-      <p className="text-neutral-400">Let&apos;s create a Telegram Web App!</p>
-      <div className="flex gap-2 mt-2">
-        <div className="bg-neutral-800 rounded-lg text-2xl px-4 py-2 grow">
-          <span className="block text-xs text-neutral-400 font-semibold tracking-wider uppercase">Counter</span>
-          {counter}
-        </div>
-        <button className="bg-neutral-800 hover:bg-neutral-800/50 focus:ring-4 focus:ring-neutral-800/50 outline-none rounded-lg text-2xl px-6 transition-[background,box-shadow]" onClick={() => setCounter(counter + 1)}>
-          +
-        </button>
-      </div>
+      <CounterForm value={ counter} />
     </>
   )
 }

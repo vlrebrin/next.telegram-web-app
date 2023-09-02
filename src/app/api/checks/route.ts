@@ -10,23 +10,24 @@ export async function GET(request: NextRequest) {
     const limit = limit_str ? parseInt(limit_str, 10) : 10;
     const skip = (page - 1) * limit;
 
-    const users = await prisma.user.findMany({
+    const checks = await prisma.check.findMany({
       skip,
       take: limit,
-      // orderBy: {
-      //   createdAt: "desc",
-      // },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     let json_response = {
       status: "success",
-      results: users.length,
-      users,
+      results: checks.length,
+      checks,
     };
+
     return NextResponse.json(json_response);
-    } catch (error: any) {
+  } catch (error: any) {
     let error_response = {
-      status: "Ошибка",
+      status: "error",
       message: error.message,
     };
     return new NextResponse(JSON.stringify(error_response), {
@@ -36,29 +37,30 @@ export async function GET(request: NextRequest) {
   }
 }
 
+
 export async function POST(request: Request) {
   try {
     const json = await request.json();
-
-    const user = await prisma.user.create({
+    const check = await prisma.check.create({
       data: json,
     });
 
     let json_response = {
       status: "success",
       data: {
-        user,
+        check,
       },
     };
     return new NextResponse(JSON.stringify(json_response), {
       status: 201,
       headers: { "Content-Type": "application/json" },
     });
+  
   } catch (error: any) {
     if (error.code === "P2002") {
       let error_response = {
-        status: "ошибка",
-        message: "Такой участник уже есть",
+        status: "Ошибка!",
+        message: "Счет уже существует",
       };
       return new NextResponse(JSON.stringify(error_response), {
         status: 409,
@@ -67,7 +69,7 @@ export async function POST(request: Request) {
     }
 
     let error_response = {
-      status: "Ошибка",
+      status: "error",
       message: error.message,
     };
     return new NextResponse(JSON.stringify(error_response), {

@@ -1,4 +1,4 @@
-import { User, Counter, Checks } from "@prisma/client";
+import { User, Metering, Check } from "@prisma/client";
 import { members } from "./lib/conf-data";
 //import { Counter } from "@prisma/client";
 
@@ -8,11 +8,11 @@ export type ErrorResponse = {
   message: string;
 };
 
-export type UserListResponse = {
-  status: string;
-  results: number;
-  users: User[];
-};
+// export type UserListResponse = {
+//   status: string;
+//   results: number;
+//   users: User[];
+// };
 
 export type UserResponse = {
   status: string;
@@ -27,13 +27,19 @@ export type UsersResponse = {
 
 export type CounterResponse = {
   status: string;
-  data: { counter: Counter };
+  data: { counter: Metering };
 };
 
-export type ChekResponse = {
+export type CheckResponse = {
   status: string;
-  data: { check: Checks };
-};
+  data: { check: Check }
+}
+
+export type ChecksResponse = {
+  status: string;
+  results: number;
+  checks: Check[];
+}
 
 const SERVER_ENDPOINT = process.env.SERVER_ENDPOINT || "http://localhost:3000";
 
@@ -41,31 +47,25 @@ async function handleResponse<T>(response: Response): Promise<T> {
   const contentType = response.headers.get("Content-Type") || "";
   const isJson = contentType.includes("application/json");
   const data = isJson ? await response.json() : await response.text();
-
   if (!response.ok) {
     const message = isJson
       ? data.message || response.statusText
       : response.statusText;
     throw new Error(message);
   }
-
   return data as T;
 }
 
-export async function apiCreateCheck(
-  checkData: string
-): Promise<Checks> {
-  const response = await fetch(`${SERVER_ENDPOINT}/api/check/`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: checkData,
-  });
-  
-  return handleResponse<ChekResponse>(response).then(
-    (data) => data.data.check
-  );
+export async function apiGetChecks(
+  page: number,
+  limit: number
+): Promise<Check[]> {
+  const response = await fetch(
+    `${SERVER_ENDPOINT}/api/checks?page=${page}&limit=${limit}`
+  )
+  return handleResponse<ChecksResponse>(response).then(
+    (data) => data.checks
+  )
 }
 
 export async function apiCreateUser(
@@ -78,40 +78,59 @@ export async function apiCreateUser(
     },
     body: userData,
   });
-
   return handleResponse<UserResponse>(response).then(
     (data) => data.data.user
   );
 }
 
-export async function apiFetchUsers(
+export async function apiCreateCheck(
+   checkData:string 
+   // checkData: {
+    //   value: number,
+    //   summa: number
+    // }
+  ): Promise<Check> {
+  const response = await fetch(`${SERVER_ENDPOINT}/api/checks/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: checkData,
+  });
+  return handleResponse<CheckResponse>(response).then(
+    (data) => data.data.check
+  );
+}
+
+export async function apiGetUsers(
   page: number,
   limit: number
 ): Promise<User[]> {
   const response = await fetch(
-    `${SERVER_ENDPOINT}/api/users` // ?page=${page}&limit=${limit}`
+    `${SERVER_ENDPOINT}/api/users?page=${page}&limit=${limit}`
   );
-  
   return handleResponse<UsersResponse>(response).then(
     (data) => data.users
   );
 }
 
-export async function apiCreateCounter(
-  counterData:string
-): Promise<Counter>{
-  const response = await fetch(`${SERVER_ENDPOINT}/api/counters/`, {
-    method: "POST",
-    headers: {
-      "Contrnt-Type": "application/json",
-    },
-    body:counterData,
-  });
+
+
+// export async function apiCreateCounter(
+//   counterData:string
+// ): Promise<Counter>{
+//   const response = await fetch(`${SERVER_ENDPOINT}/api/counters/`, {
+//     method: "POST",
+//     headers: {
+//       "Contrnt-Type": "application/json",
+//     },
+//     body:counterData,
+//   });
   
-  return handleResponse<CounterResponse>(response).then(
-    (data) => data.data.counter
-  );
-}
+//   return handleResponse<CounterResponse>(response).then(
+//     (data) => data.data.counter
+//   );
+// }
 
 // export async function apiFetchSingleFeedback(
 //   feedbackId: string
