@@ -99,7 +99,8 @@
   } */
 
   .wrapper {
-    @apply bg-white w-[375px] min-h-screen mx-auto p-6;
+    
+    @apply bg-gray-100 w-[375px] min-h-screen py-4 mx-auto;
     @apply border-solid border-4 rounded-2xl border-black;
     /* @apply bg-amber-100 w-[375px] min-h-screen mx-auto p-6; */
     /* background-color: var(--tg-theme-bg-color); */

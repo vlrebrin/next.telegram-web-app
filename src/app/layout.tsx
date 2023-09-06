@@ -1,3 +1,5 @@
+
+
 import Head from 'next/head'
 import Script from 'next/script'
 import { Manrope } from 'next/font/google'
@@ -5,6 +7,7 @@ import Providers from './providers'
 import './globals.css'
 import '../components/nav'
 import Nav from '../components/nav'
+import Menubar from '../components/navbar'
 
 
 const manrope = Manrope({
@@ -26,17 +29,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <head>
           <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
         </head>
-      <body>
-       
-        <Providers>
-          <main className="wrapper">
-            <Nav />
-            {children}
-          </main>
-        </Providers>
-      </body>
+        <body>
+          <Providers>
+            <main className="wrapper">
+              <Menubar />
+              <div className='px-6'>
+                {children}
+              </div>
+            </main>
+          </Providers>
+        </body>
       </html >
-      </>
-    
+    </>
+
   )
 }

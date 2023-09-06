@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, redirect } from 'next/navigation'
-import Link from 'next/link'
+// import Link from 'next/link'
 export default function Nav() {
   const router = useRouter()
 
@@ -16,9 +16,9 @@ export default function Nav() {
       <button onClick={() => router.replace('/')} className="inline-block text-sm px-4 py-2 leading-none border rounded bg-teal-500 text-white border-white active:border-black hover:bg-teal-600 active:bg-teal-700">
         Баланс
       </button>
-      <button onClick={() => router.replace('/reports')} className="inline-block text-sm px-4 py-2 leading-none border rounded bg-teal-500 text-white border-white active:border-black hover:bg-teal-600 active:bg-teal-700 ">
+      {/* <button onClick={() => router.replace('/reports')} className="inline-block text-sm px-4 py-2 leading-none border rounded bg-teal-500 text-white border-white active:border-black hover:bg-teal-600 active:bg-teal-700 ">
         Отчеты
-      </button>
+      </button> */}
       <button onClick={() => router.replace('/test/checks')} className="inline-block text-sm px-4 py-2 leading-none border rounded bg-teal-500 text-white border-white active:border-black hover:bg-teal-600 active:bg-teal-700 ">
         Тест
       </button>
