@@ -5,7 +5,7 @@ import { User, Metering, Check } from "@prisma/client"
 import { useChecks } from "@/store-todo"
 import { apiGetChecks } from "@/api-requests"
 
-export default function CheckForm() {
+export default function Checks() {
   
   const store = useChecks();
   const checks = store.checks

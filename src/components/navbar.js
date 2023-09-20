@@ -26,8 +26,8 @@ export default function Menubar() {
           </Button>
         </NavbarItem>
         <NavbarItem>
-            <Button onClick={() => router.replace('/test/checks')} color="primary" href="/test/checks" variant="flat">
-            Тест
+            <Button onClick={() => router.replace('/checks/new')} color="primary"  variant="flat">
+            Новый счет
           </Button>
         </NavbarItem>
       </NavbarContent>

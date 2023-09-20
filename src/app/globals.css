@@ -99,10 +99,22 @@
   } */
 
   .wrapper {
-    
+
     @apply bg-gray-100 w-[375px] min-h-screen py-4 mx-auto;
     @apply border-solid border-4 rounded-2xl border-black;
     /* @apply bg-amber-100 w-[375px] min-h-screen mx-auto p-6; */
     /* background-color: var(--tg-theme-bg-color); */
+  }
+
+  /* Удаляем стрелки из input type='number
+    см. https://stackoverflow.com/questions/3790935/can-i-hide-the-html5-number-input-s-spin-box
+  */
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0;
+    /* <-- Apparently some margin are still there even though it's hidden */
   }
 }

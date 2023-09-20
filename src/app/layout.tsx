@@ -32,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <body>
           <Providers>
             <main className="wrapper">
+            {/* <main> */}
               <Menubar />
               <div className='px-6'>
                 {children}
