@@ -16,13 +16,13 @@ export default function Menubar() {
       
         <NavbarContent className=" sm:flex gap-2 px-0 " justify="center">
         <NavbarItem>
-            <Button onClick={() => router.replace('/counters')} color="primary" variant="flat">
-            Счетчики
+            <Button onClick={() => router.replace('/')} color="primary" variant="flat">
+            Главная
           </Button>
         </NavbarItem>
         <NavbarItem isActive>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Customers
+            <Button onClick={() => router.replace('/checks')} color="primary" variant="flat">
+            Счета
           </Button>
         </NavbarItem>
         <NavbarItem>

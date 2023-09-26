@@ -6,6 +6,29 @@ import {
   apiCreateUser,
   apiGetUsers,
 } from "@/api-requests";
+import { useChecks} from "@/store-todo"
+
+export async function getChecks() {
+  // const store = useChecks();
+  // store.setIsError(false);
+  // store.setPageLoading(true);
+  try {
+    const res = await fetch(
+      `${process.env.SERVER_ENDPOINT || "http://localhost:3000"}/api/checks?page=1&limit=12}`
+    )
+    const data = await res.json()
+    const checks = data.checks
+    // store.setChecksList(data);
+    // const last = checks[0]
+    // setLastCheck(last);
+    // setCurrentValue(last.value)
+    // setCurrentSumma(last.summa)
+    return data.checks 
+  } catch (error) {
+    //store.setIsError(true);
+  }
+  //store.setPageLoading(false);
+};
 
 export async function createUsers() {
   members.map(member => {
