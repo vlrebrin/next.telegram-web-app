@@ -23,7 +23,7 @@ export default function SelectCheck( props ) {
       <Card>
         <CardBody className="mt-0">
           <div className="flex-1">
-            <p class="text-center font-bold text-xl">Счета</p>
+            <p className="text-center font-bold text-xl">Счета</p>
           </div>
           <Select // СЧЕТА
             // selectedKeys={selectedCheck}
