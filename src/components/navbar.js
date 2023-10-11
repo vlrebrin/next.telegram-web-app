@@ -19,8 +19,13 @@ export default function Menubar() {
             <Button onClick={() => router.replace('/')} color="primary" variant="flat">
             Главная
           </Button>
-        </NavbarItem>
-        <NavbarItem isActive>
+          </NavbarItem>
+          {/* <NavbarItem >
+            <Button onClick={() => router.replace('/test/users')} color="primary" variant="flat">
+              Users
+            </Button>
+          </NavbarItem> */}
+        <NavbarItem>
             <Button onClick={() => router.replace('/checks')} color="primary" variant="flat">
             Счета
           </Button>

@@ -19,7 +19,7 @@ model Check {
   id        Int       @id @default(autoincrement())
   summa     Float     @default(12000.2)
   value     Int       @default(22214)
-  intake    Int      @default(0)
+  intake    Int       @default(0)
   closed    Boolean   @default(true)
   createdAt DateTime  @default(now())
   Meterings   Metering[]
@@ -34,5 +34,5 @@ model Metering {
   checkId   Int
   userId    Int
   User      User     @relation(fields: [userId], references: [id])
-  Check     Check   @relation(fields: [checkId], references: [id])
+  Check     Check    @relation(fields: [checkId], references: [id])
 }

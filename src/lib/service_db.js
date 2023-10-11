@@ -1,6 +1,6 @@
 import { Check, Prisma, User, Metering} from "@prisma/client";
 import { prisma } from "./prisma";
-import Counter from "@/app/counters/page";
+//import Counter from "@/app/counters/page";
 import { members } from "@/lib/conf-data";
 import {
   apiCreateUser,
@@ -30,19 +30,52 @@ export async function getChecks() {
   //store.setPageLoading(false);
 };
 
-export async function createUsers() {
+// async function createUser( data ) {
+
+//   try {
+//     const user = await prisma.user.create({
+//       data:{name:'Ребрин'}
+//     })
+//     return { user }
+//   } catch (error) {
+//     return { error }
+//   }
+// }
+export async function generateUsers() {
   members.map(member => {
-    const dataUser = JSON.stringify({
-      name: member.name,
-      jsondata: JSON.stringify(member)
-    })
-    const user = apiCreateUser(dataUser)
+    createUser(member)
   })
 }
-export async function getUsers() { 
-  const users = await apiGetUsers(1, 20)
-  return users as User[]
+
+async function createUser(member) {
+  const user = await prisma.user.create({
+    data: {
+      name: member.name,
+      jsondata: JSON.stringify(member.counters)
+    }
+  })
 }
+    
+    //const user =await createUser({ data })
+  
+
+
+// export async function getUsers() { 
+//   const users = await apiGetUsers(1, 20)
+//   return users as User[]
+// }
+
+export async function createMetering({ data })
+{
+  try {
+    const counter = await prisma.metering.create({data})
+    return { counter }
+  } catch (error) {
+    return { error }
+  }
+}
+
+
 
 
 

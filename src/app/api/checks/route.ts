@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-  try {
+  try { 
     const page_str = request.nextUrl.searchParams.get("page");
     const limit_str = request.nextUrl.searchParams.get("limit");
 

@@ -9,9 +9,13 @@ import {
   Card, CardHeader, CardBody, Select, SelectItem,
   Spacer, Button, Tooltip, Input, Textarea
 } from "@nextui-org/react";
+import { NextURL } from "next/dist/server/web/next-url";
+import { NextRequest } from "next/server";
+import { usePathname } from 'next/navigation'
 
 
 export default function Checks() {
+
   
   const store = useChecks();
   const checks = store.checks
@@ -26,15 +30,24 @@ export default function Checks() {
   const [currentSumma, setCurrentSumma] = useState({});
   //const [checkss, setCheckss]=useState([])
 
+  const pathname = usePathname()
+
   useEffect(() => {
     const getChecks = async () => {
       store.setIsError(false);
       store.setPageLoading(true);
       try {
-        const res = await fetch(
-          `${SERVER_ENDPOINT}/api/checks?page=1&limit=12}`,
-          { mode: "no-cors" }
-        )
+         //const u = new NextRequest()
+         //const h=NextRequest.nextUrl.host
+        // const p = pathname
+       
+        // const res = await fetch(
+        //   `${SERVER_ENDPOINT}/api/checks?page=1&limit=12}`,
+        //   { mode: "no-cors" }
+        // )
+
+        const res = await fetch("/api/checks?page=1&limit=12}", { mode: "no-cors" })
+        
         const data = await res.json()
         console.log("redy")
         const checks = data.checks
