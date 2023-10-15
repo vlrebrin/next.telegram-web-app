@@ -20,7 +20,7 @@ model Check {
   summa     Float     @default(12000.2)
   value     Int       @default(22214)
   intake    Int       @default(0)
-  closed    Boolean   @default(true)
+  closed    Boolean   @default(false)
   createdAt DateTime  @default(now())
   Meterings   Metering[]
 }

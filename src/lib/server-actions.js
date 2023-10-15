@@ -5,11 +5,7 @@ import { createUsers } from "@/lib/service_db";
 
 export async function createCheckAction(data) {
   
-
-  //const name = formData//.get('name');
-  console.log(data)
   try {
-    //const json = await data.json();
     const check = await prisma.check.create({
       data
     });
@@ -18,13 +14,30 @@ export async function createCheckAction(data) {
       skip: 0, take: 12, orderBy: { name: "asc" }
     })
 
-    //const users = createUsers()
-    return check
+     users.map( user => {
+      
+      const boxes = JSON.parse(user.jsondata)
+      boxes.map( box => {
+        createMetering({
+          data: {
+            num: box.num,
+            checkId: check.id,
+            userId: user.id
+          }
+        })
+      })
+    })
   }
   catch (error) {
     throw (error)
   }
-  
+}
+
+async function createMetering({ data }) {
+  const counter = await prisma.metering.create({
+      data
+   })
+  return counter
 }
 
 async function createMeteringAction(data) {
@@ -35,5 +48,4 @@ async function createMeteringAction(data) {
   catch (error) {
     throw (error)
   }
-
 }
