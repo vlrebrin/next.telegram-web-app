@@ -2,27 +2,25 @@
 import { useState, useEffect } from "react";
 import {
   Card, CardHeader, CardBody, Select, SelectItem,
-  Spacer, Button, Tooltip, Input, Textarea
+  Spacer, Button, RadioGroup, Radio,
+  Tooltip, Input, Textarea, Listbox, ListboxItem
 } from "@nextui-org/react";
 import { useRouter,usePathname } from 'next/navigation'
 
 export default function SelectCheck(props) {
  
-  const { checks, users } = props
-  const [selectedcheck, setSelectedCheck] = useState(new Set([`${checks[0].id}`]));
+  const { checks, users, meterings } = props
+  const [selectedCheck, setSelectedCheck] = useState(new Set([`${checks[0].id}`]));
   const [selectedUser, setSelectedUser] = useState(new Set([`${users[0].id}`]))
-  
-  // const handleSelectionChange = (e) => {
-  //   const nw = new Set([e.target.value])
-  //   setSelectedCheck(nw);
-  //   //setSelectedCheck(new Set([e.target.value]));
-  // };
+  const [filtredMeterings, setFiltredMetering]=useState(meterings)
 
-  // useEffect(() => {
-  //   //const st=new Set([1,57])
-  //   //console.log(value)
-
-  // },[value])
+  useEffect(() => {
+    setFiltredMetering(
+      meterings.filter((m) =>
+        selectedCheck.has(`${m.checkId}`) &&
+        selectedUser.has(`${m.userId}`)
+      ))
+  },[selectedCheck, selectedUser])
 
   
   console.log("ready")
@@ -35,7 +33,7 @@ export default function SelectCheck(props) {
             <p className="text-center font-bold text-xl">Счета</p>
           </div>
           <Select // СЧЕТА
-            selectedKeys={selectedcheck}
+            selectedKeys={selectedCheck}
             onSelectionChange={setSelectedCheck}
             variant="faded"
             label="Счет"
@@ -66,7 +64,41 @@ export default function SelectCheck(props) {
               </SelectItem>
             ))}
           </Select>
+         
+           {
+            filtredMeterings.length > 1 && 
+            
+            <RadioGroup
+              label="Select your favorite city"
+                size="sm"
+            >
+              <Radio value="buenos-aires">Buenos Aires</Radio>
+              <Radio value="sydney">Sydney</Radio>
+              <Radio value="san-francisco">San Francisco</Radio>
+              <Radio value="london">London</Radio>
+              <Radio value="tokyo">Tokyo</Radio>
+            </RadioGroup>
+         
+            
+          // <Listbox
+          //    items={filtredMeterings}
+          //    aria-label="Dynamic Actions"
+          //    onAction={(key) => alert(key)}
+          //  >
 
+          //    {(item) => (
+          //      <ListboxItem
+          //        key={item.id}
+          //      >
+          //        {item.num}
+          //      </ListboxItem>
+          //    )}
+          //   </Listbox>
+            
+}
+          
+          
+          
         </CardBody>
       </Card>
     </>
