@@ -50,7 +50,7 @@ export const members = [
 
   {
     id: 0, name: "Гончаренко", tg_id: 0,
-    counters: [{ num: "30" }]
+    counters: [{ num: "31" }]
   },
 
   {
@@ -59,7 +59,7 @@ export const members = [
   },
 
   {
-    id: 0, name: "Лисенкова", tg_id: 0,
+    id: 0, name: "Салий", tg_id: 0,
     counters: [{ num: "28" }]
   },
 

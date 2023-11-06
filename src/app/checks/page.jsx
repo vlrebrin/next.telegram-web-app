@@ -1,21 +1,36 @@
 import { prisma } from "@/lib/prisma";
-import  SelectCheck,{CheckIsEmpty}  from "./components/selectcheck"
+import SelectCheck, { CheckIsEmpty } from "./components/selectcheck"
+import TableCounters from "./components/tablecounters"
 
 export default async function Page() {
 
   const checks = await prisma.check.findMany({
     skip: 0, take: 12, orderBy: { createdAt: "desc", },
   })
-
+  if (!checks.length) return (<CheckIsEmpty />)
+  
   const users = await prisma.user.findMany({
     skip: 0, take: 12, orderBy: { name: "asc"}
   })
-  const meterings = await prisma.metering.findMany({
-    skip: 0, take: 180, orderBy: { createdAt: "desc" }
+  const meterings = await prisma.meteringInfo.findMany({
+    skip: 0, take: 180,
+    orderBy: [
+      { createdAt: "desc" },
+      { checkId:"asc" },
+      { userId:"asc" },
+      { num: "asc" },
+    ]
   })
   
+  // if (!checks.length) return (<CheckIsEmpty />)
+  // return (<SelectCheck
+  //   checks={checks}
+  //   users={users}
+  //   meterings={meterings}
+  // />)
+
   if (!checks.length) return (<CheckIsEmpty />)
-  return (<SelectCheck
+  return (<TableCounters
     checks={checks}
     users={users}
     meterings={meterings}

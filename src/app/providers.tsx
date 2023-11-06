@@ -4,13 +4,11 @@ import { NextUIProvider } from '@nextui-org/react'
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-  <NextUIProvider> 
-    <TelegramProvider>
-      {/* <NextUIProvider> */}
+    <NextUIProvider>
+      <TelegramProvider>
         {children}
-      {/* </NextUIProvider> */}
-    </TelegramProvider >
-    </NextUIProvider> 
-      
-    )
+      </TelegramProvider >
+    </NextUIProvider>
+
+  )
 }

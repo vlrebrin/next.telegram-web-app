@@ -1,14 +1,12 @@
 
-
-import Head from 'next/head'
+//import { Html, Head, Main, NextScript } from 'next/document'
+//import Head from 'next/head'
 import Script from 'next/script'
 import { Manrope } from 'next/font/google'
 import Providers from './providers'
 import './globals.css'
 import '../components/nav'
-import Nav from '../components/nav'
 import Menubar from '../components/navbar'
-
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -25,23 +23,23 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <html className={manrope.variable} lang="en" suppressHydrationWarning>
+      {/* <html className={manrope.variable} lang="en"  suppressHydrationWarning> */}
+      <html className='light' lang="en" suppressHydrationWarning> 
         <head>
-          <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
+          <body>
+            <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
+            <Providers>
+              <main className="wrapper">
+                {/* <main> */}
+                <Menubar />
+                <div className='px-6'>
+                  {children}
+                </div>
+              </main>
+            </Providers>
+          </body>
         </head>
-        <body>
-          <Providers>
-            <main className="wrapper">
-            {/* <main> */}
-              <Menubar />
-              <div className='px-6'>
-                {children}
-              </div>
-            </main>
-          </Providers>
-        </body>
       </html >
     </>
-
   )
 }

@@ -65,9 +65,8 @@ export default function SelectCheck(props) {
             ))}
           </Select>
          
-           {
+           {/* {
             filtredMeterings.length > 1 && 
-            
             <RadioGroup
               label="Select your favorite city"
                 size="sm"
@@ -78,27 +77,23 @@ export default function SelectCheck(props) {
               <Radio value="london">London</Radio>
               <Radio value="tokyo">Tokyo</Radio>
             </RadioGroup>
-         
+          } */}
             
-          // <Listbox
-          //    items={filtredMeterings}
-          //    aria-label="Dynamic Actions"
-          //    onAction={(key) => alert(key)}
-          //  >
+           <Listbox
+              items={filtredMeterings}
+              aria-label="Dynamic Actions"
+              onAction={(key) => alert(key)}
+            >
+        
+              {(item) => (
+                <ListboxItem
+                  key={item.id}
+                >
+                  {item.num}
+                </ListboxItem>
+              )}
+             </Listbox>
 
-          //    {(item) => (
-          //      <ListboxItem
-          //        key={item.id}
-          //      >
-          //        {item.num}
-          //      </ListboxItem>
-          //    )}
-          //   </Listbox>
-            
-}
-          
-          
-          
         </CardBody>
       </Card>
     </>

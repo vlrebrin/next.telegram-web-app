@@ -7,91 +7,7 @@
     @apply bg-gray-400;
     /* background-color: var(--tg-theme-bg-color); */
   }
-
-
 }
-
-
-/* button {@apply bg-blue-400 w-fit;} */
-@layer components {
-
-  /* .btn {
-      background-color: theme('colors.blue.500');
-      border-radius: theme('borderRadius.lg');
-      padding: theme('spacing.6');
-      box-shadow: theme('boxShadow.xl');
-    } */
-
-  .btn-blue {
-    @apply font-bold py-2 px-4 rounded bg-teal-500 text-white w-fit;
-  }
-
-  .btn-blue:hover {
-    @apply bg-teal-700;
-  }
-
-  .btn-red {
-    @apply font-bold py-2 px-4 rounded bg-red-500 text-white w-fit;
-  }
-
-  .btn-red:hover {
-    @apply bg-red-700;
-  }
-
-  .h3 {
-    @apply font-bold text-2xl text-center
-  }
-
-  .button {
-    background-color: theme('colors.blue.700');
-    border-radius: theme('borderRadius.lg');
-    padding: theme('spacing.2');
-    box-shadow: theme('boxShadow.xl');
-    color: theme('colors.white');
-    width: theme('width.fit');
-  }
-
-  .button:hover {
-    background-color: theme('colors.blue.800');
-  }
-
-  .button:focus {
-    background-color: theme('colors.blue.900');
-  }
-
-  .navitem {
-    @apply inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white
-  }
-
-  /* .navitem:hover {
-    @apply hover: border-transparent hover: text-teal-500 hover:bg-white
-  } */
-
-  /* button:hover {
-      background-color: theme('colors.blue.800')
-    } */
-}
-
-/* button {
-      inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal 
-      text-white shadow-[0_4px_9px_-4px_#3b71ca] 
-      transition duration-150 ease-in-out 
-      hover:bg-primary-500 
-      hover:shadow-[0_8px_9px_-4px_rgba(59, 113, 202, 0.3), 0_4px_18px_0_rgba(59, 113, 202, 0.2)] 
-      focus:bg-primary-600 
-      focus:shadow-[0_8px_9px_-4px_rgba(59, 113, 202, 0.3), 0_4px_18px_0_rgba(59, 113, 202, 0.2)] 
-      focus:outline-none focus:ring-0 
-      active:bg-primary-700 
-      active:shadow-[0_8px_9px_-4px_rgba(59, 113, 202, 0.3), 0_4px_18px_0_rgba(59, 113, 202, 0.2)] 
-      dark:shadow-[0_4px_9px_-4px_rgba(59, 113, 202, 0.5)] 
-      dark:hover:shadow-[0_8px_9px_-4px_rgba(59, 113, 202, 0.2), 0_4px_18px_0_rgba(59, 113, 202, 0.1)] 
-      dark:focus:shadow-[0_8px_9px_-4px_rgba(59, 113, 202, 0.2), 0_4px_18px_0_rgba(59, 113, 202, 0.1)] 
-      dark:active:shadow-[0_8px_9px_-4px_rgba(59, 113, 202, 0.2), 0_4px_18px_0_rgba(59, 113, 202, 0.1)]
-    } */
-
-
-
-
 
 @layer components {
   /* .wrapper-brd {
@@ -100,9 +16,9 @@
 
   .wrapper {
 
-    @apply bg-gray-100 w-[375px] min-h-screen py-4 mx-auto;
+    /* @apply bg-gray-100  w-[375px] h-[660px] py-4 mx-auto; */
     @apply border-solid border-4 rounded-2xl border-black;
-    /* @apply bg-amber-100 w-[375px] min-h-screen mx-auto p-6; */
+    @apply bg-amber-100 w-[375px] min-h-screen mx-auto p-0;
     /* background-color: var(--tg-theme-bg-color); */
   }
 
@@ -117,4 +33,25 @@
     margin: 0;
     /* <-- Apparently some margin are still there even though it's hidden */
   }
+
+
+  /* Chrome, Edge, and Safari */
+/* *::-webkit-scrollbar {
+  width: 17px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--primary);
+  border-radius: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--secondary);
+  border-radius: 14px;
+  border: 3px solid var(--primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--tertiary);
+} */
 }
