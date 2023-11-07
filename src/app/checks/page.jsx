@@ -15,20 +15,13 @@ export default async function Page() {
   const meterings = await prisma.meteringInfo.findMany({
     skip: 0, take: 180,
     orderBy: [
-      { createdAt: "desc" },
-      { checkId:"asc" },
+      //{ createdAt: "desc" },
+      { checkId:"desc" },
       { userId:"asc" },
       { num: "asc" },
     ]
   })
   
-  // if (!checks.length) return (<CheckIsEmpty />)
-  // return (<SelectCheck
-  //   checks={checks}
-  //   users={users}
-  //   meterings={meterings}
-  // />)
-
   if (!checks.length) return (<CheckIsEmpty />)
   return (<TableCounters
     checks={checks}
