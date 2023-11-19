@@ -35,7 +35,7 @@ export default function Form(props) {
     startTransition(async () => {
       const ch = await createCheckAction(data)
     })
-    router.replace("/checks")
+    //router.replace("/checks")
   });
 
   return (

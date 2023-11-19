@@ -5,6 +5,7 @@ SELECT
   m.value,
   m.intake,
   m.payment,
+  m.contribution,
   m.isNoValue,
   m.isCommon,
   m.checkId,

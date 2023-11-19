@@ -18,9 +18,8 @@ import {
   PaginationCursor,
   ScrollShadow
 } from "@nextui-org/react";
-import { useRouter, usePathname } from 'next/navigation'
 import { useTransition } from "react";
-import { updateMeterings } from "@/lib/server-actions"
+import { fillMeteringData, CalculateMeteringData } from "@/lib/server-actions"
 
 export function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -32,13 +31,13 @@ export const columns = [
   { name: "НАИМЕН.", uid: "num" },
   { name: "СЧЕТЧ.", uid: "value" },
   { name: "ПОТР.", uid: "intake", sortable: true },
-  { name: "СУММА", uid: "summa", sortable: true },
-  { name: "ПЛАТЕЖ", uid: "payment" },
+  { name: "ВЗНОС", uid: "contribution", sortable: true },
+  { name: "СУММА", uid: "payment", sortable: true },
 ];
 
 export default function TableCounters(props) {
 
-  const INITIAL_VISIBLE_COLUMNS = ["name", "num", "value", "intake"];
+  const INITIAL_VISIBLE_COLUMNS = ["name", "num", "value", "intake","payment","contribution"]
   const { checks, users, meterings } = props
   const rowsPerPage = 15;
   //const pages = Math.ceil(meterings.length / rowsPerPage);
@@ -56,7 +55,7 @@ export default function TableCounters(props) {
     const end = start + rowsPerPage;
 
     return meterings.slice(start, end);
-  }, [page, pages, meterings]);
+  }, [page, meterings]);
 
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === "all") return columns;
@@ -110,9 +109,13 @@ export default function TableCounters(props) {
             </Button>
           </DropdownTrigger>
           <DropdownMenu onAction={(key) => {
-            if (key == "Fill") {
+            if (key === "Fill") {
               startTransition(() => {
-                updateMeterings(page, rowsPerPage)
+                fillMeteringData(page, rowsPerPage)
+              })
+            } else if (key === "Calculate") {
+              startTransition(() => {
+                CalculateMeteringData(page, rowsPerPage)
               })
             } else alert(key)
           }}>
@@ -193,7 +196,8 @@ export default function TableCounters(props) {
         );
       case "value":
         return (
-          <div className={isNoValueClass}>
+          // <div className={isNoValueClass}>
+          <div>
             <p>{cellValue}</p>
           </div>
         );
@@ -201,6 +205,18 @@ export default function TableCounters(props) {
         return (
           <div >
             <p >{cellValue}</p>
+          </div>
+        );
+      case "payment":
+        return (
+          <div >
+            <p >{cellValue.toFixed(2)}</p>
+          </div>
+        );
+      case "contribution":
+        return (
+          <div >
+            <p >{cellValue.toFixed(2)}</p>
           </div>
         );
       default:
@@ -224,7 +240,7 @@ export default function TableCounters(props) {
         classNames={{
           //wrapper: "max-h-[382px]",
           tr: "hover:bg-blue-400",
-          td: "py-1",
+          td: "pl-1 pt-1 pb-0",
           //th:"bg-red-500"
         }}
         selectedKeys={selectedKeys}
@@ -259,5 +275,22 @@ export default function TableCounters(props) {
         </TableBody>
       </Table>
     </div>
+  )
+}
+
+import { useRouter, usePathname } from 'next/navigation'
+export function CheckIsEmpty() {
+  const router = useRouter()
+  return (
+    <>
+      <p className=" p-5 ">
+        Нет ни одного Счета
+        <Button
+          color="primary"
+          variant="light"
+          onPress={(e) => { router.replace("/checks/new") }}
+        > Создать счет </Button>
+      </p>
+    </>
   )
 }

@@ -5,7 +5,6 @@ import Script from 'next/script'
 import { Manrope } from 'next/font/google'
 import Providers from './providers'
 import './globals.css'
-import '../components/nav'
 import Menubar from '../components/navbar'
 
 const manrope = Manrope({

@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import SelectCheck, { CheckIsEmpty } from "./components/selectcheck"
-import TableCounters from "./components/tablecounters"
+//import SelectCheck, { CheckIsEmpty } from "./components/selectcheck"
+import TableCounters,{ CheckIsEmpty } from "./components/tablecounters"
 
 export default async function Page() {
 
@@ -30,3 +30,4 @@ export default async function Page() {
   />)
   
 }
+

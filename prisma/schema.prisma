@@ -27,35 +27,34 @@ model Check {
 }
 
 model Metering {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  num       String
-  value     Int      @default(0)
-  intake    Int      @default(0)
-  payment   Float    @default(0.0)
-  isNoValue Boolean  @default(false)
-  isCommon  Boolean  @default(false)
-  checkId   Int
-  userId    Int
-  Check     Check    @relation(fields: [checkId], references: [id])
-  User      User     @relation(fields: [userId], references: [id])
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  num          String
+  value        Int      @default(0)
+  intake       Int      @default(0)
+  payment      Float    @default(0.0)
+  contribution Float    @default(0.0)
+  isNoValue    Boolean  @default(true)
+  isCommon     Boolean  @default(false)
+  checkId      Int
+  userId       Int
+  User         User     @relation(fields: [userId], references: [id])
+  Check        Check    @relation(fields: [checkId], references: [id])
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view MeteringInfo {
-  id        Int   @unique
-  createdAt DateTime?
-  num       String?
-  value     Int?
-  intake    Int?
-  payment   Float?
-  isNoValue Boolean?
-  isCommon  Boolean?
-  checkId   Int?
-  userId    Int?
-  name      String?
-  value_1   Int?      @map("value:1")
-  summa     Float?
-
- //@@ignore
+  id           Int    @unique
+  createdAt    DateTime?
+  num          String?
+  value        Int?
+  intake       Int?
+  payment      Float?
+  contribution Float?
+  isNoValue    Boolean?
+  isCommon     Boolean?
+  checkId      Int?
+  userId       Int?
+  name         String?
+  value_1      Int?      @map("value:1")
+  summa        Float?
 }
