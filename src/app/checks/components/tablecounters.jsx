@@ -20,13 +20,13 @@ import {
 } from "@nextui-org/react";
 import { useTransition } from "react";
 import { fillMeteringData, CalculateMeteringData } from "@/lib/server-actions"
+import { useRouter, redirect } from 'next/navigation'
 
 export function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 export const columns = [
-  // { name: "ID", uid: "id", sortable: true },
   { name: "УЧАСТ.", uid: "name", sortable: true },
   { name: "НАИМЕН.", uid: "num" },
   { name: "СЧЕТЧ.", uid: "value" },
@@ -40,20 +40,18 @@ export default function TableCounters(props) {
   const INITIAL_VISIBLE_COLUMNS = ["name", "num", "value", "intake","payment","contribution"]
   const { checks, users, meterings } = props
   const rowsPerPage = 15;
-  //const pages = Math.ceil(meterings.length / rowsPerPage);
   const pages = checks.length
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition();
 
   const [visibleColumns, setVisibleColumns] = React.useState(new Set(INITIAL_VISIBLE_COLUMNS));
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
+  const [disabledItems, setDisabledKeys] = React.useState(new Set([]));
   const [page, setPage] = React.useState(1);
-  //const [pageColor, setPageColor] = React.useState()
-  const [isPending, startTransition] = useTransition();
-  //const [currentCheck, setCurrentCheck]=React.useState()
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
-
     return meterings.slice(start, end);
   }, [page, meterings]);
 
@@ -61,27 +59,24 @@ export default function TableCounters(props) {
     if (visibleColumns === "all") return columns;
     return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
   }, [visibleColumns]);
+  
+  const disabledKeys = React.useMemo(() => {
+    var temp
+    if (checks[page - 1].closed) temp = new Set(["Fill", "Calculate"]) 
+    else temp = new Set(["newCheck"])
+      setDisabledKeys(temp)
+   }, [checks, page]);
 
   const topContent = React.useMemo(() => {
     return (
       <div className="flex justify-between gap-3 items-end">
-        {/* <div className="flex gap-3"> */}
-        <Dropdown
-        //showArrow
-        // classNames={{
-        //   base: "py-1 px-1 border border-default-200 bg-gradient-to-br from-white to-default-200 dark:from-default-50 dark:to-black",
-        //   arrow: "bg-default-100",
-        // }}
-        >
-          {/* <DropdownTrigger className="hidden sm:flex"> */}
+        <Dropdown>
           <DropdownTrigger>
             <Button
-              //endContent={<ChevronDownIcon className="text-small" />}
               size="sm"
               variant="flat"
-            >
-              Cтолбцы
-            </Button>
+              fullWidth
+            > Cтолбцы </Button>
           </DropdownTrigger>
           <DropdownMenu
             disallowEmptySelection
@@ -92,9 +87,7 @@ export default function TableCounters(props) {
             onSelectionChange={setVisibleColumns}
           >
             {columns.map((column) => (
-              <DropdownItem key={column.uid}
-                className="capitalize"
-              >
+              <DropdownItem className="capitalize" key={column.uid}>
                 {capitalize(column.name)}
               </DropdownItem>
             ))}
@@ -104,11 +97,15 @@ export default function TableCounters(props) {
         <Dropdown>
           <DropdownTrigger>
             <Button size="sm" variant="flat"
-              isDisabled={checks[page - 1].closed}>
-              Имитатор
-            </Button>
+              ullWidth
+            > Действия </Button>
           </DropdownTrigger>
-          <DropdownMenu onAction={(key) => {
+          <DropdownMenu
+            disallowEmptySelection
+            aria-label="Menu Actions"
+            closeOnSelect={true}
+            disabledKeys={disabledItems}
+            onAction={(key) => {
             if (key === "Fill") {
               startTransition(() => {
                 fillMeteringData(page, rowsPerPage)
@@ -117,22 +114,17 @@ export default function TableCounters(props) {
               startTransition(() => {
                 CalculateMeteringData(page, rowsPerPage)
               })
-            } else alert(key)
+            } else if (key === "newCheck") router.push('/checks/new')
+            else alert(key)
           }}>
-            <DropdownItem key="Fill" > Заполнить </DropdownItem>
-            <DropdownItem key="Calculate"> Расчитать </DropdownItem>
+            <DropdownItem key="newCheck">   Новый счет </DropdownItem>
+            <DropdownItem key="Fill">       Заполнить </DropdownItem>
+            <DropdownItem key="Calculate">  Расчитать </DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
     )
-  }, [
-    // filterValue,
-    // statusFilter,
-    visibleColumns,
-    page,
-    checks,
-    // hasSearchFilter,
-  ])
+  }, [ router, visibleColumns, disabledItems,page, ])
 
   const bottomContent = React.useMemo(() => {
     const currentCheck = checks[page - 1]
@@ -155,21 +147,12 @@ export default function TableCounters(props) {
             page={page}
             total={pages}
             onChange={setPage}
-            classNames={{
-              //wrapper: "px-4 "
-              //base: "content-center"
-            }}
+            //classNames={{}}
           />
         </div>
       </div>
     )
-  }, [
-    checks,
-    //pageColor,
-    //selectedKeys,
-    page,
-    pages
-  ])
+  }, [ checks, page, pages ])
 
   const renderCell = React.useCallback((metering, columnKey) => {
     const cellValue = metering[columnKey];
@@ -224,31 +207,30 @@ export default function TableCounters(props) {
     }
   }, []);
 
-  const HandlerRowAction = (key) => {
-    const k = key
-    console.log(key)
-//    console.log(prevMetering(key))
-  }
+  // const HandlerRowAction = (key) => {
+  //   const k = key
+  //   console.log(key)
+  //   console.log(prevMetering(key))
+  // }
 
   return (
-    <div className="flex ">
+    <div className="flex mt-6">
+      <Card>
+        <CardHeader className="flex justify-center">
+          <p className="pt-4 text-xl font-bold"> История </p>
+        </CardHeader>
       <Table
         aria-label="Example table with custom cells, pagination and sorting"
         isHeaderSticky
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
         classNames={{
-          //wrapper: "max-h-[382px]",
           tr: "hover:bg-blue-400",
           td: "pl-1 pt-1 pb-0",
-          //th:"bg-red-500"
         }}
         selectedKeys={selectedKeys}
-        //selectionMode="multiple"
-        //laiout="fixed"
-        //isStriped
         selectionBehavior="replace"
-        onRowAction={HandlerRowAction}
+        //onRowAction={HandlerRowAction}
         topContent={topContent}
         topContentPlacement="inside"
         onSelectionChange={setSelectedKeys}
@@ -257,11 +239,8 @@ export default function TableCounters(props) {
           {(column) => (
             <TableColumn
               key={column.uid}
-              //align={column.uid === "actions" ? "center" : "start"}
               allowsSorting={column.sortable}
-            >
-              {column.name}
-            </TableColumn>
+            > {column.name} </TableColumn>
           )}
         </TableHeader>
         <TableBody emptyContent={"No users found"}
@@ -273,14 +252,13 @@ export default function TableCounters(props) {
             </TableRow>
           )}
         </TableBody>
-      </Table>
+        </Table>
+        </Card>
     </div>
   )
 }
 
-import { useRouter, usePathname } from 'next/navigation'
 export function CheckIsEmpty() {
-  const router = useRouter()
   return (
     <>
       <p className=" p-5 ">
@@ -288,7 +266,7 @@ export function CheckIsEmpty() {
         <Button
           color="primary"
           variant="light"
-          onPress={(e) => { router.replace("/checks/new") }}
+          onPress={(e) => { router.push("/checks/new") }}
         > Создать счет </Button>
       </p>
     </>

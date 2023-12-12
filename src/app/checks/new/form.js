@@ -5,9 +5,7 @@ import { useState, useEffect } from 'react'
 import { Card, CardHeader, CardBody, Spacer, Button, Input, Link } from "@nextui-org/react";
 import { createCheckAction } from "@/lib/server-actions"
 import { useTransition } from "react";
-import { useRouter, redirect } from 'next/navigation'
-
-
+import { useRouter, usePathname, useSearchParams, redirect } from 'next/navigation'
 
 export default function Form(props) {
 
@@ -17,11 +15,12 @@ export default function Form(props) {
   const [intake, setIntake] = useState()
   const [isPending, startTransition] = useTransition();
   const router = useRouter()
+  //const pathname = usePathname()
+  //const par=useSearchParams()
 
   useEffect(() => {
-    const v = value - lastValue
-    setIntake(v)
-  }, [value])
+    setIntake(value - lastValue)
+  }, [value, lastValue])
 
   const {
     register,
@@ -35,18 +34,18 @@ export default function Form(props) {
     startTransition(async () => {
       const ch = await createCheckAction(data)
     })
-    //router.replace("/checks")
   });
 
   return (
-    < form >
-      <Spacer y={4} />
-      <Card>
-        <CardHeader>
-          Текущие значения
+    <Card className="mt-6">
+    {/* < form > */}
+      {/* <Spacer yt={6} /> */}
+        <CardHeader className="flex justify-center">
+          <p className="pt-4 text-xl font-bold"> Новый счет </p>
         </CardHeader>
         <CardBody className="flex">
-          <Spacer y={0} />
+        < form >
+          <Spacer yt={4} />
           <Input {...register("value",
             {
               required: {
@@ -67,14 +66,17 @@ export default function Form(props) {
             onValueChange={(v) => { setValue(v) }}
             color={errors.value ? "danger" : "default"}
             errorMessage={errors.value ? errors.value.message : ""}
-            variant="faded" label="Счетчик" type="number" size="lg"
+            variant="faded"
+            size="lg"
+            label={<p className="text-lg font-bold"> Счетчик </p>} type="number"
             step="1"
-            labelPlacement={"outside-left"}
+            labelPlacement={"inside"}
+            description={<p className="text-sm font-bold">{`Потребление : ${intake} кВт·час`}</p>}
             endContent={"кВт·час"}
           //pattern="\d*"
           />
 
-          <Spacer y={4} />
+          <Spacer y={6} />
           <Input {...register("summa",
             {
               required: {
@@ -93,38 +95,35 @@ export default function Form(props) {
             })}
             color={errors.summa ? "danger" : "default"}
             errorMessage={errors.summa ? errors.summa.message : ""}
-
-            label=" Сумма " variant="faded" type="number" size="lg"
+            label={<p className="text-lg font-bold"> Сумма </p>}
+            size="lg"
+            type="number" 
             step={0.01}
-            labelPlacement={"outside-left"}
+            labelPlacement={"inside"}
+            variant="faded"
             endContent={"руб."}
             defaultValue={10}
             value={summa}
             onValueChange={(v) => { setSumma(v) }}
           />
 
-          <Spacer y={4} />
-          <Input {...register("intake", { valueAsNumber: true })}
-            value={intake}
-            onValueChange={(v) => { setIntake(v) }}
-            label="Потребление" variant="faded" type="number" size="lg"
-            step="0"
-            labelPlacement="outside-left"
-            isReadOnly
-            endContent={"кВт·час"}
-            defaultValue={0}
-          />
-          <Spacer y={4} />
+          <Spacer y={6}/>
           <Button clasName="mx-12"
             type="submit" color="primary"
             fullWidth isDisabled={!isValid}
+            size="lg"
             onClick={formSubmit}
-          >
-            Передать
-          </Button>
-        </CardBody>
-      </Card>
-    </form>
+          > Передать </Button>
+        </form> 
+        <Spacer y={6} />
+        <Button clasName="mx-12"
+          type="submit" color="primary"
+          fullWidth
+          size="lg"
+          onClick={() => router.back()}
+        > Отменить </Button>
+      </CardBody>
+    </Card>
   )
 }
 
