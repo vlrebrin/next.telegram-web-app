@@ -1,5 +1,5 @@
 'use client'
-import { TelegramProvider } from './telegram.provider'
+//import { TelegramProvider } from './telegram.provider'
 //import { TelegramProvider } from '@/telegram/provider'
 import { NextUIProvider } from '@nextui-org/react'
 
