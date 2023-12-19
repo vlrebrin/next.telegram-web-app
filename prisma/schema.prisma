@@ -4,57 +4,10 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        Int        @id @default(autoincrement())
-  tg_id     Int        @default(0)
-  name      String     @unique
-  jsondata  String     @default("NO JSON DATA")
-  Meterings Metering[]
-}
-
-model Check {
-  id        Int        @id @default(autoincrement())
-  summa     Float      @default(12000.2)
-  value     Int        @default(22214)
-  intake    Int        @default(0)
-  closed    Boolean    @default(false)
-  createdAt DateTime   @default(now())
-  Meterings Metering[]
-}
-
-model Metering {
-  id           Int      @id @default(autoincrement())
-  createdAt    DateTime @default(now())
-  num          String
-  value        Int      @default(0)
-  intake       Int      @default(0)
-  payment      Float    @default(0.0)
-  contribution Float    @default(0.0)
-  isNoValue    Boolean  @default(true)
-  isCommon     Boolean  @default(false)
-  checkId      Int
-  userId       Int
-  User         User     @relation(fields: [userId], references: [id])
-  Check        Check    @relation(fields: [checkId], references: [id])
-}
-
-view MeteringInfo {
-  id           Int    @unique
-  createdAt    DateTime?
-  num          String?
-  value        Int?
-  intake       Int?
-  payment      Float?
-  contribution Float?
-  isNoValue    Boolean?
-  isCommon     Boolean?
-  checkId      Int?
-  userId       Int?
-  name         String?
-  value_1      Int?      @map("value:1")
-  summa        Float?
-}
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model testtable {
+// }
