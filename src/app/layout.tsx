@@ -6,6 +6,8 @@
 import { Manrope } from 'next/font/google'
 //import Providers from './providers'
 import './globals.css'
+import { createUsers } from "@/lib/server-actions"
+import { prisma } from "@/lib/prisma";
 import Menubar from '../components/navbar'
 //import { bot } from "./bot"
 const manrope = Manrope({
@@ -23,9 +25,17 @@ export const metadata = {
 
 
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   //bot
-    return (
+  try {
+    const users = await prisma.user.findMany({
+      skip: 0, take: 2, orderBy: { name: "asc" }
+    })
+    if(users.length=== 0) await createUsers()
+  }
+  catch (error) { throw (error)}
+
+  return (
     
       // <body>
       // <Providers>

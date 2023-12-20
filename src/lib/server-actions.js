@@ -1,5 +1,6 @@
 "use server"
 import { prisma } from "@/lib/prisma";
+import { members } from "@/lib/conf-data";
 //import { createUsers } from "@/lib/service_db";
 //import { AsyncResource } from "async_hooks";
 import { error } from "console";
@@ -20,6 +21,25 @@ import { get } from "react-hook-form";
 //   revalidatePath("/checks")
 //   //return counter
 // }
+
+
+async function createUser(member) {
+  const user = await prisma.user.create({
+    data: {
+      name: member.name,
+      jsondata: JSON.stringify(member.counters)
+    }
+  })
+  return { user }
+}
+
+export async function createUsers() {
+  members.map(member => {
+    createUser(member)
+  })
+}
+
+
 
 export async function createCheckAction(data) {
 

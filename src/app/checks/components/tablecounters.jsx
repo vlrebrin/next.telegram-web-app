@@ -259,6 +259,7 @@ export default function TableCounters(props) {
 }
 
 export function CheckIsEmpty() {
+  const router = useRouter()
   return (
     <>
       <p className=" p-5 ">
