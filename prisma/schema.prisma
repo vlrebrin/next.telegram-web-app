@@ -19,7 +19,6 @@ model User {
 model Check {
   id        Int        @id @default(autoincrement())
   summa     Float      @default(12000.2)
-  value     Int        @default(22214)
   intake    Int        @default(0)
   closed    Boolean    @default(false)
   createdAt DateTime   @default(now())
@@ -42,10 +41,9 @@ model Metering {
   User         User     @relation(fields: [userId], references: [id])
 }
 
-
-
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view MeteringInfo {
-  id           Int    @unique
+  id           Int @unique
   createdAt    DateTime?
   num          String?
   value        Int?
@@ -57,6 +55,6 @@ view MeteringInfo {
   checkId      Int?
   userId       Int?
   name         String?
-  value_1      Int?      @map("value:1")
+  checkintake  Int?
   summa        Float?
 }
