@@ -93,11 +93,18 @@ export default function TableCounters(props) {
             ))}
           </DropdownMenu>
         </Dropdown>
-
-        <Dropdown>
+        <Button className="mx-12"
+          type="submit" color="primary"
+          fullWidth
+          size="sm"
+          onClick={() => router.back()}
+          //onClick={() => redirect("/")}
+        > Назад </Button>
+         
+        {/* <Dropdown>
           <DropdownTrigger>
             <Button size="sm" variant="flat"
-              ullWidth
+              fullWidth
             > Действия </Button>
           </DropdownTrigger>
           <DropdownMenu
@@ -121,7 +128,7 @@ export default function TableCounters(props) {
             <DropdownItem key="Fill">       Заполнить </DropdownItem>
             <DropdownItem key="Calculate">  Расчитать </DropdownItem>
           </DropdownMenu>
-        </Dropdown>
+        </Dropdown> */}
       </div>
     )
   }, [ router, visibleColumns, disabledItems,page, ])

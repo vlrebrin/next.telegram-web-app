@@ -30,10 +30,13 @@ export default function Form(props) {
     mode: "all"   // onChange | onBlur | onSubmit | onTouched | all = 'onSubmit'
   })
 
+  
+
   const formSubmit = handleSubmit(async (data) => {
     startTransition(async () => {
       const ch = await createCheckAction(data)
     })
+    router.back()
   });
 
   return (
@@ -116,7 +119,7 @@ export default function Form(props) {
           > Передать </Button>
         </form> 
         <Spacer y={6} />
-        <Button clasName="mx-12"
+        <Button className="mx-12"
           type="submit" color="primary"
           fullWidth
           size="lg"
@@ -136,7 +139,10 @@ export function CheckNotHandled() {
         <Button
           color="primary"
           variant="light"
-          onPress={(e) => { router.replace("/checks") }}
+          onPress={(e) => {
+            //router.replace("/checks")
+            router.back()
+          }}
         > Назад </Button>
       </p>
     </>

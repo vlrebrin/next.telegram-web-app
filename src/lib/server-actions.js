@@ -44,7 +44,6 @@ export async function createUsers() {
 export async function createCheckAction(data) {
 
   try {
-
     const check = await prisma.check.create({
       data
     });
@@ -89,7 +88,7 @@ export async function createCheckAction(data) {
   }
 }
 
-async function getCheck(page) {
+export async function getCheck(page) {
   // Заданный счет
   const checks = await prisma.check.findMany({
     skip: page - 1, take: 1,
@@ -98,6 +97,11 @@ async function getCheck(page) {
   })
   return checks[0]
 }
+export async function lastCheckClosed(){
+  await getCheck(1).closed
+}
+//revalidateTag('lastCheck')
+
 
 async function getMeterings(page, rowPerPage) {
 
