@@ -4,7 +4,7 @@
 //import Head from 'next/head'
 //import Script from 'next/script'
 import { Manrope } from 'next/font/google'
-//import Providers from './providers'
+import Providers from './providers'
 import './globals.css'
 import { createUsers } from "@/lib/server-actions"
 import { prisma } from "@/lib/prisma";
@@ -59,7 +59,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <body>
         {/* <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" /> */}
        
-            {/* <Providers> */}
+            <Providers>
               <main className="wrapper">
                 {/* <main> */}
                 {/* <Menubar /> */}
@@ -68,7 +68,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   {children}
                 {/* </div> */}
               </main>
-            {/* </Providers> */}
+            </Providers>
           </body>
        
       </html >
