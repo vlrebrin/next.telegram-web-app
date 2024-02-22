@@ -60,14 +60,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" /> */}
        
             <Providers>
-              <main className="wrapper">
+              {/* <main className="wrapper"> */}
                 {/* <main> */}
                 {/* <Menubar /> */}
             {/* <div className='px-6'> */}
                 {/* <div> */}
                   {children}
                 {/* </div> */}
-              </main>
+              {/* </main> */}
             </Providers>
           </body>
        
