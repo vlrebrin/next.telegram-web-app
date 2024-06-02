@@ -221,47 +221,54 @@ export default function TableCounters(props) {
   // }
 
   return (
-    <div className="flex mt-6">
-      <Card>
+     <div className="flex">
+    {/* <Card className = "mx-2 my-4 h-full">
         <CardHeader className="flex justify-center">
           <p className="pt-4 text-xl font-bold"> История </p>
-        </CardHeader>
-      <Table
-        aria-label="Example table with custom cells, pagination and sorting"
-        isHeaderSticky
-        bottomContent={bottomContent}
-        bottomContentPlacement="outside"
-        classNames={{
-          tr: "hover:bg-blue-400",
-          td: "pl-1 pt-1 pb-0",
-        }}
-        selectedKeys={selectedKeys}
-        selectionBehavior="replace"
-        //onRowAction={HandlerRowAction}
-        topContent={topContent}
-        topContentPlacement="inside"
-        onSelectionChange={setSelectedKeys}
-      >
-        <TableHeader columns={headerColumns}>
-          {(column) => (
-            <TableColumn
-              key={column.uid}
-              allowsSorting={column.sortable}
-            > {column.name} </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody emptyContent={"No users found"}
-          items={items}
+      </CardHeader>
+      </Card>
+         */}
+        <Table
+          shadow="none"
+          radius="none"
+          isCompact="true"
+          aria-label="Example table with custom cells, pagination and sorting"
+          isHeaderSticky
+          bottomContent={bottomContent}
+          bottomContentPlacement="outside"
+          classNames={{
+            tr: "hover:bg-blue-400",
+            td: "pl-0 pt-1 pb-0",
+          }}
+          selectedKeys={selectedKeys}
+          selectionBehavior="replace"
+          //onRowAction={HandlerRowAction}
+          topContent={topContent}
+          topContentPlacement="inside"
+          onSelectionChange={setSelectedKeys}
         >
-          {(item) => (
-            <TableRow key={item.id}>
-              {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-            </TableRow>
-          )}
-        </TableBody>
-        </Table>
-        </Card>
-    </div>
+          <TableHeader columns={headerColumns}>
+            {(column) => (
+              <TableColumn
+                key={column.uid}
+                allowsSorting={column.sortable}
+              > {column.name} </TableColumn>
+            )}
+          </TableHeader>
+          <TableBody emptyContent={"No users found"}
+            items={items}
+          >
+            {(item) => (
+              <TableRow key={item.id}>
+                {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+              </TableRow>
+            )}
+          </TableBody>
+          </Table>
+       
+      
+     
+     </div>
   )
 }
 

@@ -39,6 +39,16 @@ export async function createUsers() {
   })
 }
 
+export async function getUserByPhone(data, path) {
+  // Заданный счет
+  const user = await prisma.user.findFirst({
+    //skip: page - 1, take: 1,
+    where: { phone: data },
+    //orderBy: { createdAt: "desc" },
+  })
+  revalidatePath(path);
+  return user// [0]
+}
 
 
 export async function createCheckAction(data) {

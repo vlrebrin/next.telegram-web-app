@@ -40,7 +40,7 @@ export default function Form(props) {
   });
 
   return (
-    <Card className="mt-6">
+    <Card className="m-2 h-full">
     {/* < form > */}
       {/* <Spacer yt={6} /> */}
         <CardHeader className="flex justify-center">

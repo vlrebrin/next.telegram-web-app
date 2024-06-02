@@ -24,13 +24,13 @@ export const metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   //bot
-  try {
-    const users = await prisma.user.findMany({
-      skip: 0, take: 2, orderBy: { name: "asc" }
-    })
-    if(users.length=== 0) await createUsers()
-  }
-  catch (error) { throw (error)}
+  // try {
+  //   const users = await prisma.user.findMany({
+  //     skip: 0, take: 2, orderBy: { name: "asc" }
+  //   })
+  //   if(users.length=== 0) await createUsers()
+  // }
+  // catch (error) { throw (error)}
 
   return (
     
