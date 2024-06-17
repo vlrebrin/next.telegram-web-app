@@ -10,7 +10,30 @@ const config = {
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
-    extend: {},
+    extend: {
+
+      // screens: {
+        
+      //   //'sm': { 'min': '640px', 'max': '767px' },
+      //   // => @media (min-width: 640px) { ... }
+
+      //   'md': [
+      //     { 'min': '668px', 'max': '767px' },
+      //     { 'min': '766x', 'max': '1024px' },
+      //     { 'min':'1023', 'max':'1280'}
+      //   ]
+      //   //  '768px',
+      //   // => @media (min-width: 768px) { ... }
+
+      //   //'lg': '1024px',
+      //   // => @media (min-width: 1024px) { ... }
+
+      //   //'xl': '1280px',
+      //   // => @media (min-width: 1280px) { ... }
+        
+      // }
+
+    },
   },
   darkMode: "class",
   plugins: [nextui()]

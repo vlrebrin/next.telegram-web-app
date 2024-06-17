@@ -7,9 +7,9 @@ import {
   ProfileButton,
   RegisterButton,
 } from "@/components/auth.buttons"
-import { User } from "@/components/auth.user"
+import { UseSession }  from "@/components/auth.user"
 
-export default function Home() {
+export default  function Home() {
   const text = "Server session."
   return (
     // <main
@@ -21,7 +21,8 @@ export default function Home() {
     //   }}
     // >
     <Card>
-    <CardBody className="flex" >
+      <UseSession/>
+      <CardBody >
         <Spacer y={6}/>
         <LoginButton />
         <Spacer y={6}/>
@@ -30,13 +31,6 @@ export default function Home() {
         <LogoutButton />
         <Spacer y={6}/>
         <ProfileButton />
-        
-        {/* <Text h1>{text}</Text> */}
-        {/* <Text b>{JSON.stringify(session)}</Text> */}
-
-        <User />
-
-
       </CardBody>
     </Card>  
     // </main>

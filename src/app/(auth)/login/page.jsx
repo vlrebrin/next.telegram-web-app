@@ -6,6 +6,8 @@ import { title } from "process";
 import { useRef, useState } from "react";
 import { useTransition } from "react";
 import { useForm, useFormState } from "react-hook-form"
+import { signIn } from "next-auth/react";
+
 
 
 export default function Page() {
@@ -17,11 +19,14 @@ export default function Page() {
   const formSubmit = handleSubmit( async (data) => {
     startTransition(
       async () => {
-        const user = await getUserByPhone(
-          data.phone,
-          'getUserByPhone'
-        )
-        setPhone(user)
+        console.log(data)
+        //await signIn("credentials", { redirectTo: "/auth" }, data)
+        await signIn("credentials", data, {redirect:'/auth' })
+        // const user = await getUserByPhone(
+        //   data.phone,
+        //   'getUserByPhone'
+        // )
+        // setPhone(user)
       }
     )
     //return user
@@ -31,8 +36,8 @@ export default function Page() {
   return (
     <>
       <form
-        onSubmit={formSubmit}
-        //action={formSubmit}
+        //onSubmit={formSubmit}
+        action={formSubmit}
         ref={formRef}
         className="flex items-center space-x-2 mb-2"
       >

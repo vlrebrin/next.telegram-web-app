@@ -1,12 +1,14 @@
 "use client";
-import { Card, CardHeader, CardBody, Spacer, Button, Spinner, Input, Link } from "@nextui-org/react";
-import { signIn, signOut } from "next-auth/react";
+import { Button } from "@nextui-org/button";
+ import { signIn, signOut } from "next-auth/react";
+//import { signIn, signOut }  from "@/auth";
 import { useRouter } from 'next/navigation'
 //import Link from "next/link";
 
 export const LoginButton = () => {
   return (
-    <Button onClick={() => signIn()}
+    <Button
+      onClick={() => signIn()}
       type="submit" color="primary"
       fullWidth
       size="lg"
@@ -15,6 +17,7 @@ export const LoginButton = () => {
     </Button>
   );
 };
+
 
 export const RegisterButton = () => {
   const router = useRouter()
