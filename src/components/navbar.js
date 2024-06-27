@@ -26,15 +26,15 @@ export default function Menubar() {
             </Button>
           </NavbarItem> */}
         <NavbarItem>
-            <Button onClick={() => router.replace('/checks')} color="primary" variant="flat">
-            Счета
+            <Button onClick={() => router.replace('/auth')} color="primary" variant="flat">
+            Auth
           </Button>
         </NavbarItem>
-        <NavbarItem>
+        {/* <NavbarItem>
             <Button onClick={() => router.replace('/checks/new')} color="primary"  variant="flat">
             Новый счет
           </Button>
-        </NavbarItem>
+        </NavbarItem> */}
       </NavbarContent>
       
       </Navbar>

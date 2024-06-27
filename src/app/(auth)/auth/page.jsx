@@ -1,27 +1,34 @@
 'use client'
-import { Card, Text, CardHeader, CardBody, Spacer, Button, Spinner, Input, Link }
-  from "@nextui-org/react";
+import { CardHeader,Card, CardBody, Spacer} from "@nextui-org/react";
+import { useSession } from "next-auth/react"
+import { useEffect, useState, useMemo } from 'react'
+import { Session } from "@/components/session"
+import { ModalSession } from "@/components/sesisonmodal"
 import {
   LoginButton,
   LogoutButton,
   ProfileButton,
   RegisterButton,
 } from "@/components/auth.buttons"
-import { UseSession }  from "@/components/auth.user"
 
 export default  function Home() {
-  const text = "Server session."
+  const { data: session, status } = useSession()
+  const [user,setUser]=useState(null)
+  
+  const ModalSessioner = useMemo(() => {
+    //setAdmin(session?.user.role === "ADMIN" ? false : true)
+    //return <Session status={status} session={session} />
+    return <Session status={status} session={ session} />
+  }, [status])
+  
   return (
-    // <main
-    //   style={{
-    //     display: "flex",
-    //     justifyContent: "center",
-    //     alignItems: "center",
-    //     height: "70vh",
-    //   }}
-    // >
-    <Card>
-      <UseSession/>
+    <>
+     
+      <Card>
+      <CardHeader className="flex justify-center">
+        <p className="pt-4 text-xl font-bold"> Control </p>
+        </CardHeader>
+        {ModalSessioner}
       <CardBody >
         <Spacer y={6}/>
         <LoginButton />
@@ -32,7 +39,7 @@ export default  function Home() {
         <Spacer y={6}/>
         <ProfileButton />
       </CardBody>
-    </Card>  
-    // </main>
-  );
+      </Card> 
+    </>  
+  )
 }

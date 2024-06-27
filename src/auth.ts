@@ -48,7 +48,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     session({ session, token }) {
       if (token.user) {
         (session as Session).user = token.user
-
       }
       return session
     },
@@ -83,7 +82,11 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         const user = await getUserByPhone(
           credentials?.phone,
           'getUserByPhone'
-        ) as User|null
+        ) as User | null
+        
+        // if (!user) {
+        //   throw new Error("User not found.")
+        // }
 
         //const user = { id: "1", name: "Admin", email: "admin@admin.com", role:"Guest" };
         return user

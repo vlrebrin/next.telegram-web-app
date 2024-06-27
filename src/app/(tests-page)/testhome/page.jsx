@@ -1,19 +1,23 @@
 'use client'
-//import waiter from "@/components/loading"
-//import { Spinner, Card, Container, Col, Row, Textarea, Chip } from "@nextui-org/react"
-import { Spinner } from "@nextui-org/spinner"
+import { auth } from "@/auth"
+import {useSession} from "next-auth/react"
 
-export default function App() {
+export default function Page() {
+  const  session  = useSession()
+  
+  if (!session) return <div>Not authenticated</div>
+
   return (
- <>
-      <div className="flex min-h-[660px] justify-center items-center">
-      {/* <div className="flex flex-col min-h-[660px] justify-center items-center"> */}
-        
-        <div className='flex justify-center h-auto relative '>
-          <Spinner label="label ..." size="sm" color="danger" />
-        </div>
-        
-        <span className="object-center"> Loading ... </span>
-      </div> 
-    </>
-  )}
+    <div>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
+    </div>
+  )
+  // const session = await auth()
+  // if (!session) return <div>Not authenticated</div>
+
+  // return (
+  //   <div>
+  //     <pre>{JSON.stringify(session, null, 2)}</pre>
+  //   </div>
+  // )
+}

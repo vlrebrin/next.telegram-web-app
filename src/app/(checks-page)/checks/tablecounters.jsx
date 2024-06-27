@@ -98,7 +98,6 @@ export default function TableCounters(props) {
           fullWidth
           size="sm"
           onClick={() => router.back()}
-          //onClick={() => redirect("/")}
         > Назад </Button>
          
         {/* <Dropdown>

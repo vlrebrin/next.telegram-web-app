@@ -1,13 +1,15 @@
 'use client'
 import { revalidateTag } from 'next/cache'
 import { useRouter } from 'next/navigation'
-import {useEffect, useState} from 'react'
-import { Head, Card, CardHeader, CardBody, Spacer, Button,  Input, Link } from "@nextui-org/react";
-import {Loading} from "@nextui-org/react"
+import {useEffect, useState, useMemo} from 'react'
+import { Head, Card, CardHeader, CardBody, Spacer, Button, Input, Link } from "@nextui-org/react";
+import { Spinner } from "@nextui-org/spinner"
 import useSWR from 'swr'
 import React from 'react';
 import { useSession, SessionProvider, signIn, signOut } from "next-auth/react"
-import { User, UseSession } from "@/components/auth.user"
+//import { User, UseSession } from "@/components/auth.user"
+import { Session } from "@/components/session"
+import { Loader } from "@/components/loader"
 
 const fetcher = async (url) => {
   const res = await fetch(url)
@@ -20,36 +22,40 @@ const fetcher = async (url) => {
   return data
 }
 
-export default function Page() {
-
-  const { data: session, status, error } = useSession()
+export default function Home() {
+  
   const router = useRouter()
-  //if (status === "loading")
-  //return  <Loading/>
-      // <div className='flex justify-center h-auto relative '>
-      // {/* <div> */}
-      //   <Spinner label="Загрузка сессии..." />
-      // </div>
-      
+  const { data: session, status } = useSession()
+  const [user, setUser] = useState(null)
+  const [isNoAdmin, setNoAdmi] = useState(session?.user.role === "ADMIN" ? false : true)
+  
+  const Sessioner = useMemo(() => {
+    setUser(session?.user)
+    setNoAdmi(user?.role === "ADMIN" ? false : true)
+    return <Session status={status} session={session} /> 
     
- 
-  if(!session) router.push("/login")
-  return <Home props={session?.user.role | null} />
- 
-}
+  }, [session])
   
   
-  export function Home(userRole) {
-    const { data, error, isLoading } = useSWR('/api/checks', fetcher)
-    const router = useRouter()
-    const [ isNoAdmin, setAdmin ]=useState( userRole==="ADMIN" ? true : false )
+  
     
-    if (isLoading) return (
-      <div className='flex justify-center  h-screen relative'>
-        {/* <Spinner label="Загрузка данных..." /> */}
-      </div>
-    )
-    if (error) return <div>failed to load</div>
+  
+  const { data, error, isLoading } = useSWR('/api/checks', fetcher)
+  const [lastCheck,setLastCheck]=useState(null)
+  //const router = useRouter()
+  const Dater = useMemo(() => {
+   setLastCheck(data)
+    return <Loader loading={isLoading} />
+  }, [isLoading])  
+    
+  
+  
+    // if (isLoading) return (
+    //   // <div className='flex justify-center  h-screen relative'>
+    //     <Spinner label="Загрузка данных..." />
+    //   // </div>
+    // )
+    // if (error) return <div>failed to load</div>
     
   return (
     <>
@@ -57,8 +63,11 @@ export default function Page() {
         <CardHeader className="flex justify-center">
           <p className="pt-4 text-xl font-bold"> Главная </p>
         </CardHeader>
-        <CardBody>
 
+        {Sessioner}
+
+        <CardBody>
+          {Dater}
           <Spacer y={6} />
           <Button
             type="submit" color="primary"
@@ -67,12 +76,11 @@ export default function Page() {
             onClick={() => router.push('/checks')}
           > История </Button>
 
-          
           <div hidden={false}>
           <Spacer y={6} />
           <Button
             type="submit" color="primary"
-            isDisabled={data.checkClosed}
+              isDisabled={lastCheck?.checkClosed}
             fullWidth
             size="lg"
           //onClick={() => router.push('/checks/new')}
@@ -83,7 +91,7 @@ export default function Page() {
             <Spacer y={6} />
             <Button
               type="submit" color="primary"
-              isDisabled={!data.checkClosed}
+              isDisabled={!lastCheck?.checkClosed}
               fullWidth
               size="lg"
               onClick={() => router.push('/checks/new')}
@@ -94,7 +102,7 @@ export default function Page() {
           <Spacer y={6} />
           <Button
             type="submit" color="primary"
-            isDisabled={data.checkClosed}
+              isDisabled={lastCheck?.checkClosed}
             fullWidth
             size="lg"
           //onClick={() => router.push('/checks/new')}
@@ -102,6 +110,7 @@ export default function Page() {
           </div>
           
         </CardBody>
+       
       </Card>
     </>
   )}
