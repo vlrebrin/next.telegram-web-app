@@ -1,9 +1,15 @@
 //"use client";
 import { Button } from "@nextui-org/button";
+import { color } from "framer-motion";
  import { signIn, signOut } from "next-auth/react";
+import { Content } from "next/font/google";
 //import { signIn, signOut }  from "@/auth";
 import { useRouter } from 'next/navigation'
+import { useFormStatus } from "react-dom"
 //import Link from "next/link";
+
+
+
 
 export const LoginButton = () => {
   return (
@@ -68,3 +74,14 @@ export const ProfileButton = () => {
     </Button>
   );
 };
+
+export function PendingButton(props) {
+  const { pending } = useFormStatus()
+  //isLoading = {"true"} 
+  //props.color = "danger"
+  return (
+    <Button
+      isLoading={pending}
+      {...props}  ></Button>
+  )
+}

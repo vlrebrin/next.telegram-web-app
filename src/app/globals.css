@@ -14,6 +14,13 @@
     @apply border-solid border-r-8 border-black p-10;
   } */
 
+  /* .errorMessage {
+    @apply bg-[ #ff0000] text-white p-[6px]
+   background: #ff0000;
+  color: #fff;
+  padding: 6px; 
+  } */
+
   .wrapper {
     @apply  block bg-gray-100  w-[375px] h-[660px] mx-auto 
     /* @apply bg-gray-100  w-[375px] h-[500px] m-auto;  */

@@ -59,7 +59,7 @@ export default function Home() {
     
   return (
     <>
-      <Card>
+      <Card className='modal'>
         <CardHeader className="flex justify-center">
           <p className="pt-4 text-xl font-bold"> Главная </p>
         </CardHeader>

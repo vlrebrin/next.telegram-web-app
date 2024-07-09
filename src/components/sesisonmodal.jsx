@@ -36,8 +36,10 @@ export function ModalSession(props) {
           classNames={{
             
             base: "min-w-fit min-h-fit p-0",
-            wrapper:  "w-[375px] h-[660px] mx-auto",
+            //wrapper: "modal",
+            wrapper: "w-[375px] h-[660px] mx-auto",
             backdrop: "w-[375px] h-[660px] mx-auto bg-[#292f46]/50 backdrop-opacity-40",
+            //backdrop: "modal bg-[#292f46]/50 backdrop-opacity-40",
            //backdrop:"bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
            //base: "border-[#292f46] bg-[#00002c] dark:bg-[#19172c] text-[#a8b0d3]",
            // header: "border-b-[1px] border-[#292f46]",
@@ -47,8 +49,8 @@ export function ModalSession(props) {
         >
           <ModalContent>
             {/* <ModalBody> */}
-              <Card className="w-full h-full p-10">
-                <Spinner label="Загрузка сессии..." />
+              <Card className="w-full h-full p-4">
+                <Spinner size="sm" label="Загрузка сессии..." />
               </Card>
             {/* </ModalBody> */}
           </ModalContent>

@@ -1,90 +1,101 @@
 'use client'
-
-import { getUserByPhone } from "@/lib/server-actions"
-import { revalidatePath } from "next/cache";
-import { title } from "process";
-import { useRef, useState } from "react";
-import { useTransition } from "react";
-import { useForm, useFormState } from "react-hook-form"
-import { signIn } from "next-auth/react";
-import { useRouter, usePathname, useSearchParams, redirect } from 'next/navigation'
+//import { revalidatePath } from "next/cache";
+//import { title } from "process";
+import { useState } from "react";
+//import { useTransition } from "react";
+import { useForm } from "react-hook-form"
+import { signIn } from "@/auth"
+import { useRouter } from 'next/navigation'
 import { Card, CardHeader, CardBody, Spacer, Button, Input, Link } from "@nextui-org/react";
-import { ErrorBoundary } from 'react-error-boundary'
+import { useFormState, useFormStatus } from 'react-dom'
+import { logIn } from "./action"
+import { SessionAvatar } from "@/components/avatar"
+import { PendingButton } from "@/components/auth.buttons";
+import { useSession } from "next-auth/react"
 
-
+const initialState = {
+  message: null,
+}
 
 export default function Page() {
-  //const formRef = useRef(null);
-  const [user, setUser] = useState(null)
-  const [isPending, startTransition] = useTransition();
-  //const { register, handleSubmit, setError, formState: { errors, isValid }, } = useForm({ mode: "all" })   // onChange | onBlur | onSubmit | onTouched | all = 'onSubmit'
-  //const router = useRouter()
+  const {
+    register,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: "all", }) // onChange | onBlur | onSubmit | onTouched | all = 'onSubmit'
+ 
+  const router = useRouter()
+  const [state, formAction] = useFormState(logIn, initialState)
 
-  //const [value, setValue] = useState("")
+  const [phone, setPhone] = useState('+7');
+  const { data: session, status } = useSession()
   
-  const formSubmit = async (data) => {
-    
-    startTransition(
-    
-      async () => {
-         const user = await signIn("credentials", data)//, data, {redirect:'/auth' })
-         //console.log(user)
-         //setUser(user)
-         //router.back()
-         return user
-       })
-    
-  }
+  const handleChange = (value) => {
+    if (value.length === 1) value = '+7'
+    const cardValue = value
+      .replace(/[^\d|\+]/g, '')
+      .match(/([\+7|8]{0,2})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
+    //.replace(/[^\d]/g, '')
+    //.match(/(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/)
+
+    value =
+      (cardValue[1] ? `${cardValue[1]}` : '').concat(
+      cardValue[2] ? ` ( ${cardValue[2]}` : '').concat(
+      cardValue[3] ? ` ) ${cardValue[3]}` : '').concat(
+      cardValue[4] ? ` - ${cardValue[4]}` : '').concat(
+      cardValue[5] ? ` - ${cardValue[5]}` : '')
+
+    setPhone(value);
+  };
 
   return (
     <>
-      <Card className="m-2 h-full">
-        <CardHeader className="flex justify-center">
+      <Card className="modal">
+        <CardHeader className="flex-col justify-center">
           <p className="pt-4 text-xl font-bold"> Вход </p>
+          <Spacer yt={4} />
+          <SessionAvatar />
         </CardHeader>
-       <CardBody >
-          {/* <ErrorBoundary
-            fallback={
-              <p>
-                There was an error while submitting the
-                form
-              </p>
-            }
-          > */}
-          <form
-            action={formSubmit}
-            // action={async (formData) => {
-            //   await signIn("credentials", formData)
-            // }}
-          >
-              <Spacer yt={6} />
-              
-            <Input 
-              //value={value}
-              //onValueChange={(v) => { setValue(v) }}
-              //color={errors.value ? "danger" : "default"}
-              //errorMessage={errors.value ? errors.value.message : ""}
+        <CardBody >
+          <form action={formAction}>
+            <Spacer yt={8} />
+            <Input {...register("phone",{
+
+                required: {
+                  value: true,
+                  message: "Номер телефона не может быть пустым"
+                },
+
+                validate:
+                  (value, formValues) => {
+                    const length = value.replace(/[^\d|\+]/g, '').length
+                    return (length <= 2 || length > 11) ||
+                      `Осталось :${12 - length} цифр`
+                },
+                
+                //onChange:{handleChange}
+              })}
+              value={phone}
+              onValueChange={handleChange}
               variant="faded"
               size="lg"
               label={<p className="text-lg font-bold"> Номер телефона </p>} type="text"
-              step="1"
               labelPlacement={"inside"}
-              //description={errors && <p> {errors.value ? errors.value.message : ""} </p>}
-              description={<p> {user ? user.phone : "Bad user"} </p>}
-              //pattern="\d*"
+              description={session ? session?.user?.name : ' '}
+              color={!isValid ? "danger" : "default"}
+              isInvalid={!isValid}
+              errorMessage={errors.phone ? errors.phone.message : ''}
             />
             <Spacer yt={18} />
-            <Button clasName="mx-12"
-              type="submit"
-              color="primary"
+            {/* <p> {`isValid : ${isValid}` }</p> */}
+            <PendingButton
+              onClick={() => signIn()}
+              type="submit" color="primary"
               fullWidth
-              //isDisabled={!isValid}
               size="lg"
-              //onClick={formSubmit}
-              > Передать </Button>
-              {user && <p>{user.phone}</p>}
-            </form>
-            {/* </ErrorBoundary> */}
+              isDisabled={!isValid}
+            >Отправить</PendingButton>
+          </form>
         </CardBody>
       </Card>
     </>

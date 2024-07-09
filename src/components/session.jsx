@@ -1,5 +1,6 @@
 "use client"
 import { Spinner } from "@nextui-org/spinner";
+import { useSession } from "next-auth/react"
 
 export function Session(props) {
   
@@ -15,4 +16,22 @@ export function Session(props) {
     {/* <pre>{JSON.stringify(props.session?.user.role)}</pre> */}
     <pre>{JSON.stringify(props.session?.user.role)}</pre>
   </>
+}
+
+export function Selfsession(props) {
+  //const session = useSession()
+  if (!props.session.data) {
+    //return <p>Загрузка...</p>
+    return "Загрузка..."
+  }
+  //return <p>{session.data.user.name}</p>
+  return "session.data.user.name"
+}
+export const SessString =(props)=> {
+  //const session = useSession()
+  if (!props.session.data) {
+    return 'Загрузка...'
+  }
+  //return <p>{JSON.stringify( session?.user.role, null,2 )}</p>
+  return `${props.session.data.user.name}`
 }
