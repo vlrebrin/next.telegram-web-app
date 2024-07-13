@@ -3,6 +3,7 @@
 import { User, Spinner } from "@nextui-org/react";
 
 import { useSession } from "next-auth/react"
+import { useMemo } from "react";
 
 export function Avatar (props){
   return (
@@ -15,16 +16,13 @@ export function Avatar (props){
 }
 
 export function SessionAvatar(){//(props)
-  {
+
     const { data: session, status } = useSession()
     if (status === "loading")
       return (<Spinner label="Загрузка..." size="sm" />)
     return (
       <User
-        
         name={session?.user?.name}
         description={session?.user?.phone}
-      //{...props}
       />)
   }
-}

@@ -3,25 +3,6 @@ import NextAuth, { CredentialsSignin, Session, type User  } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { getUserByPhone } from "@/lib/server-actions"
 import { Auth } from "@auth/core"
-//import { User } from "@nextui-org/react"
-//import { Session } from "inspector"
-//import { User } from "@nextui-org/react"
-
-
-// declare module "next-auth" {
-//   /**
-//    * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
-//    */
-//   interface Session {
-//     user: {
-//       /** The user's role. */
-//       role: string
-//     } & DefaultSession["user"],
-//   }
-//   interface User {
-//     role: string
-//   }  
-//    }
 
 class InvalidLoginError extends CredentialsSignin {
   code = "Invalid identifier or password"
@@ -67,17 +48,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         },
       },
 
-      async authorize(credentials) {
-
-        let user = null
-        const temp = credentials.phone
+      authorize: async (credentials)=> {
         const phone = (credentials.phone as String).replace(/[^\d|\+]/g, '')
-        user = await getUserByPhone(
+        const user = await getUserByPhone(
           phone,
           'getUserByPhone',
         ) as User | null
 
-        if (!user) throw new Error("User not found.")
         return user
       }
     })

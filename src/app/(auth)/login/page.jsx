@@ -12,6 +12,7 @@ import { logIn } from "./action"
 import { SessionAvatar } from "@/components/avatar"
 import { PendingButton } from "@/components/auth.buttons";
 import { useSession } from "next-auth/react"
+//import  { ServerError } from"./error.tsx"
 
 const initialState = {
   message: null,
@@ -59,22 +60,21 @@ export default function Page() {
         <CardBody >
           <form action={formAction}>
             <Spacer yt={8} />
-            <Input {...register("phone",{
+            <Input {...register("phone", {
 
-                required: {
-                  value: true,
-                  message: "Номер телефона не может быть пустым"
-                },
+              required: {
+                value: true,
+                message: "Номер телефона не может быть пустым"
+              },
 
-                validate:
-                  (value, formValues) => {
-                    const length = value.replace(/[^\d|\+]/g, '').length
-                    return (length <= 2 || length > 11) ||
-                      `Осталось :${12 - length} цифр`
+              validate:
+                (value, formValues) => {
+                  const length = value.replace(/[^\d|\+]/g, '').length
+                  return (length <= 2 || length > 11) ||
+                    `Осталось :${12 - length} цифр`
                 },
                 
-                //onChange:{handleChange}
-              })}
+            })}
               value={phone}
               onValueChange={handleChange}
               variant="faded"
@@ -84,12 +84,14 @@ export default function Page() {
               description={session ? session?.user?.name : ' '}
               color={!isValid ? "danger" : "default"}
               isInvalid={!isValid}
-              errorMessage={errors.phone ? errors.phone.message : ''}
+              //errorMessage={errors.phone ? errors.phone.message : ''}
+              errorMessage={state.message}
             />
+           
             <Spacer yt={18} />
             {/* <p> {`isValid : ${isValid}` }</p> */}
             <PendingButton
-              onClick={() => signIn()}
+              //onClick={() => signIn()}
               type="submit" color="primary"
               fullWidth
               size="lg"
