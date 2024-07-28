@@ -9,8 +9,8 @@ export function Avatar (props){
   return (
     <User
      //src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-      name={props.session?.data?.user?.name}
-      description={props.session?.data?.user?.phone}
+      name={props.session?.user?.name}
+      description={props.session?.user?.phone}
     />
   )
 }
@@ -19,9 +19,9 @@ export function SessionAvatar(){//(props)
 
     const { data: session, status } = useSession()
     if (status === "loading")
-      return (<Spinner label="Загрузка..." size="sm" />)
+      return (<Spinner size="sm" />)
     return (
-      <User
+      <User className="h-max"
         name={session?.user?.name}
         description={session?.user?.phone}
       />)

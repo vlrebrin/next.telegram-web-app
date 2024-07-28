@@ -9,19 +9,14 @@ datasource db {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
-  tg_id     Int        @default(0)
-  phone     String    @default("")
-  role       Role     @default(USER)
-  name      String     @unique
-  jsondata  String     @default("NO JSON DATA")
-  Meterings Metering[]
-}
-
-enum Role {
-  USER
-  ADMIN
-  GUEST
+  id          Int        @id @default(autoincrement())
+  tg_id       Int        @default(0)
+  name        String     @unique
+  jsondata    String     @default("NO JSON DATA")
+  phone       String     @default("")
+  role        Role       @default(USER)
+  isRegistred Boolean    @default(false)
+  Meterings   Metering[]
 }
 
 model Check {
@@ -30,6 +25,7 @@ model Check {
   intake    Int        @default(0)
   closed    Boolean    @default(false)
   createdAt DateTime   @default(now())
+  date      DateTime   @default(now())
   Meterings Metering[]
 }
 
@@ -65,4 +61,10 @@ view MeteringInfo {
   name         String?
   checkintake  Int?
   summa        Float?
+}
+
+enum Role {
+  USER
+  ADMIN
+  GUEST
 }

@@ -19,9 +19,9 @@ export async function logIn(prevStateany, formData) {
         case "CredentialsSignin":
           return "Invalid credentials.";
         case "CallbackRouteError":
-          return {message: "User not found"}
+          return {message: "Такой номер не предусмотрен в приложении"}
         default:
-          return "Something went wrong.";
+          return "";
       }
     }
     throw error

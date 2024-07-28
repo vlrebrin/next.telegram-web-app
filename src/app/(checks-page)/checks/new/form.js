@@ -40,13 +40,13 @@ export default function Form(props) {
   });
 
   return (
-    <Card className="m-2 h-full">
+    <Card className="modal">
     {/* < form > */}
       {/* <Spacer yt={6} /> */}
         <CardHeader className="flex justify-center">
           <p className="pt-4 text-xl font-bold"> Новый счет </p>
         </CardHeader>
-        <CardBody className="flex">
+        <CardBody>
         < form >
           <Spacer yt={4} />
           <Input {...register("value",
@@ -111,7 +111,7 @@ export default function Form(props) {
           />
 
           <Spacer y={6}/>
-          <Button clasName="mx-12"
+          <Button
             type="submit" color="primary"
             fullWidth isDisabled={!isValid}
             size="lg"
@@ -119,7 +119,7 @@ export default function Form(props) {
           > Передать </Button>
         </form> 
         <Spacer y={6} />
-        <Button className="mx-12"
+        <Button
           type="submit" color="primary"
           fullWidth
           size="lg"

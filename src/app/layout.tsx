@@ -23,56 +23,18 @@ export const metadata = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  //bot
-  // try {
-  //   const users = await prisma.user.findMany({
-  //     skip: 0, take: 2, orderBy: { name: "asc" }
-  //   })
-  //   if(users.length=== 0) await createUsers()
-  // }
-  // catch (error) { throw (error)}
-
   return (
-    
-      // <body>
-      // <Providers>
-      // {/* <section> */}
-        
-         
-      //   {/* <Script src="https://telegram.org/js/telegram-web-app.js" /> */}
-       
-      //   {/* Include shared UI here e.g. a header or sidebar */}
-      //   {/* ?<nav></nav> */}
-      //   <Menubar />
-      //       {children}
-  
-      //   {/* </section> */}
-      //   </Providers>
-      // </body>
-     
-      
-      // <html className={manrope.variable} lang="en"  suppressHydrationWarning> 
+    // <html className={manrope.variable} lang="en"  suppressHydrationWarning> 
     <html className='light' lang="en" suppressHydrationWarning> 
       <head>
         {/* <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive"></Script> */}
       </head>
-      {/* <body className="modal">   */}
-      <body> 
+      <body className='wrapper'> 
         {/* <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" /> */}
-       
             <Providers>
-              {/* <main className="wrapper"> */}
-                {/* <main> */}
-                {/* <Menubar /> */}
-            {/* <div className='px-6'> */}
-                {/* <div> */}
                   {children}
-                {/* </div> */}
-              {/* </main> */}
             </Providers>
           </body>
-       
       </html >
-    
   )
 }

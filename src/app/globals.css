@@ -22,7 +22,7 @@
   } */
 
   .wrapper {
-    @apply  block bg-gray-100  w-[375px] h-[660px] mx-auto 
+    @apply  block bg-transparent  w-[375px] h-[660px] my-20 mx-auto
     /* @apply bg-gray-100  w-[375px] h-[500px] m-auto;  */
     /* @apply border-solid border-4 rounded-2xl border-black;  */
     /* @apply bg-amber-100 w-[375px] min-h-screen mx-auto p-0; */

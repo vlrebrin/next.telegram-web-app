@@ -1,7 +1,7 @@
 'use client'
 //import { revalidatePath } from "next/cache";
 //import { title } from "process";
-import { useState } from "react";
+import { useState, useEffect,useMemo } from "react";
 //import { useTransition } from "react";
 import { useForm } from "react-hook-form"
 import { signIn } from "@/auth"
@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 import { Card, CardHeader, CardBody, Spacer, Button, Input, Link } from "@nextui-org/react";
 import { useFormState, useFormStatus } from 'react-dom'
 import { logIn } from "./action"
-import { SessionAvatar } from "@/components/avatar"
+import { Avatar, SessionAvatar } from "@/components/avatar"
 import { PendingButton } from "@/components/auth.buttons";
 import { useSession } from "next-auth/react"
 //import  { ServerError } from"./error.tsx"
@@ -22,17 +22,34 @@ export default function Page() {
   const {
     register,
     formState: { errors, isValid },
+    setError,
+     trigger,
   } = useForm({
-    mode: "all", }) // onChange | onBlur | onSubmit | onTouched | all = 'onSubmit'
- 
-  const router = useRouter()
-  const [state, formAction] = useFormState(logIn, initialState)
-
-  const [phone, setPhone] = useState('+7');
-  const { data: session, status } = useSession()
+    mode: "all",}) // onChange | onBlur | onSubmit | onTouched | all = 'onSubmit'
   
+  //const { data: session, status } = useSession()
+  const router = useRouter() 
+  const [state, formAction] = useFormState(logIn, initialState)
+  const [phone, setPhone] = useState("+7");
+  
+  useEffect(() => {
+    trigger("phone")
+  }, [])
+  
+  useEffect(() => {
+    if (state.message !== null) {
+      setError("phone", {
+        type: "manual",
+        message: state.message,
+      })
+    }
+  }, [state, setError])
+
   const handleChange = (value) => {
-    if (value.length === 1) value = '+7'
+    if (value.length <= 1) {
+      value = '+7'
+      trigger('phone')
+    }
     const cardValue = value
       .replace(/[^\d|\+]/g, '')
       .match(/([\+7|8]{0,2})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
@@ -54,25 +71,21 @@ export default function Page() {
       <Card className="modal">
         <CardHeader className="flex-col justify-center">
           <p className="pt-4 text-xl font-bold"> Вход </p>
-          <Spacer yt={4} />
-          <SessionAvatar />
+          {/* <Spacer yt={8} /> */}
+          <div className="border-none bg-transparent mt-6 h-20">
+            <SessionAvatar />
+            {/* <Avatar session={session}/> */}
+          </div>
         </CardHeader>
         <CardBody >
           <form action={formAction}>
-            <Spacer yt={8} />
-            <Input {...register("phone", {
 
-              required: {
-                value: true,
-                message: "Номер телефона не может быть пустым"
+            <Input  {...register("phone", {
+                        
+              validate: (value, formValues) => {
+                const rest = 12 - value.replace(/[^\d|\+]/g, '').length
+                return ( !(rest <= 10 && rest > 0) || `Осталось ввести ${rest} цифр`)
               },
-
-              validate:
-                (value, formValues) => {
-                  const length = value.replace(/[^\d|\+]/g, '').length
-                  return (length <= 2 || length > 11) ||
-                    `Осталось :${12 - length} цифр`
-                },
                 
             })}
               value={phone}
@@ -81,17 +94,22 @@ export default function Page() {
               size="lg"
               label={<p className="text-lg font-bold"> Номер телефона </p>} type="text"
               labelPlacement={"inside"}
-              description={session ? session?.user?.name : ' '}
-              color={!isValid ? "danger" : "default"}
+              color={(!isValid) ? "danger" : "default"}
               isInvalid={!isValid}
-              //errorMessage={errors.phone ? errors.phone.message : ''}
-              errorMessage={state.message}
+              isClearable
+
+              // description={session ?
+              //   <div className="h-6">
+              //     <p className="font-bold">{session?.user?.name}</p>
+              //   </div> : null}
+              
+              errorMessage={errors?.phone ?
+                <div className="h-6">
+                  <p className="font-bold">{errors?.phone?.message}</p>
+                </div> : null}
             />
-           
-            <Spacer yt={18} />
-            {/* <p> {`isValid : ${isValid}` }</p> */}
-            <PendingButton
-              //onClick={() => signIn()}
+
+            <PendingButton className="mt-4"
               type="submit" color="primary"
               fullWidth
               size="lg"

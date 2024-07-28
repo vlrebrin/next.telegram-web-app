@@ -1,15 +1,35 @@
 'use client'
 import { auth } from "@/auth"
-import {useSession} from "next-auth/react"
+//import { useSession } from "next-auth/react"
+import { getCheck } from "@/lib/server-actions"
+import { useEffect, useState } from "react";
+
+const fetcher = async (url) => {
+  //const response = await fetch(url);
+  const check = await getCheck(1)
+  const a=check
+  return check
+};
+
+
 
 export default function Page() {
-  const  session  = useSession()
+  //const[c,setC]=useState()
+  const ff = fetcher()
+  const [ch, setCh]=useState(null)
   
-  if (!session) return <div>Not authenticated</div>
+  // useEffect(() => {
+  //   //const ff = fetcher()
+  //   let a = 'ff'
+  //   setCh(a)
+  // },[])
+
+
 
   return (
     <div>
-      <pre>{JSON.stringify(session, null, 2)}</pre>
+     <pre>WWWWWW</pre>
+      {/*<pre>{JSON.stringify(user.name)}</pre> */}
     </div>
   )
   // const session = await auth()
