@@ -9,14 +9,22 @@ datasource db {
 }
 
 model User {
-  id          Int        @id @default(autoincrement())
-  tg_id       Int        @default(0)
-  name        String     @unique
-  jsondata    String     @default("NO JSON DATA")
-  phone       String     @default("")
-  role        Role       @default(USER)
-  isRegistred Boolean    @default(false)
-  Meterings   Metering[]
+  id          Int       @id @default(autoincrement())
+  tg_id       Int       @default(0)
+  name        String    @unique
+  phone       String    @default("")
+  role        Role      @default(USER)
+  isRegistred Boolean   @default(false)
+  counters    Counter[]
+}
+
+model Counter {
+  id       Int        @id @default(autoincrement())
+  name     String     @unique
+  isCommon Boolean    @default(false)
+  userId   Int
+  user     User       @relation(fields: [userId], references: [id])
+  Metering Metering[]
 }
 
 model Check {
@@ -40,27 +48,9 @@ model Metering {
   isNoValue    Boolean  @default(true)
   isCommon     Boolean  @default(false)
   checkId      Int
-  userId       Int
-  Check        Check    @relation(fields: [checkId], references: [id])
-  User         User     @relation(fields: [userId], references: [id])
-}
-
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-view MeteringInfo {
-  id           Int       @unique
-  createdAt    DateTime?
-  num          String?
-  value        Int?
-  intake       Int?
-  payment      Float?
-  contribution Float?
-  isNoValue    Boolean?
-  isCommon     Boolean?
-  checkId      Int?
-  userId       Int?
-  name         String?
-  checkintake  Int?
-  summa        Float?
+  counterId    Int
+  check        Check    @relation(fields: [checkId], references: [id])
+  counter      Counter  @relation(fields: [counterId], references: [id])
 }
 
 enum Role {
