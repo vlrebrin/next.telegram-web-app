@@ -108,14 +108,7 @@ async function main() {
         }
       }
     })
-    // user.counters.forEach(async (counter) => {
-    //   await prisma.counter.create({
-    //     data: {
-    //       name: counter.name,
-    //       userId: user.id,
-    //     }
-    //   })
-     })
+   })
   }
 
 

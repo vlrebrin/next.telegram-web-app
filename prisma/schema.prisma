@@ -34,13 +34,12 @@ model Check {
   closed    Boolean    @default(false)
   createdAt DateTime   @default(now())
   date      DateTime   @default(now())
-  Meterings Metering[]
+  meterings Metering[]
 }
 
 model Metering {
   id           Int      @id @default(autoincrement())
   createdAt    DateTime @default(now())
-  num          String
   value        Int      @default(0)
   intake       Int      @default(0)
   payment      Float    @default(0.0)
