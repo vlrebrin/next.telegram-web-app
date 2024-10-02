@@ -1,4 +1,4 @@
-//import { prisma } from "@/lib/prisma"
+import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server";
 export async function GET(request) {
   
@@ -13,11 +13,8 @@ export async function GET(request) {
 
   let json_response = {
     status: "success",
-    results: checks.length,
+    //results: checks.length,
     checks,
   };
-
-  //const data=await checks.data
-  //const data = await res.json()
   return NextResponse.json(json_response);
  }

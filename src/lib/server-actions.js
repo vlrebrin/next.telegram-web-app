@@ -22,6 +22,13 @@ import { get } from "react-hook-form";
 //   //return counter
 // }
 
+export async function checkClose(check) {
+  const ch = await prisma.check.update({
+    where: { id: check.id },
+    data: { closed: true },
+  })
+  return check
+}
 
 async function createUser(member) {
   const user = await prisma.user.create({

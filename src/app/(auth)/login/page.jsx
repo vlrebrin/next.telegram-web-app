@@ -91,8 +91,8 @@ export default function Page() {
               value={phone}
               onValueChange={handleChange}
               variant="faded"
-              size="lg"
-              label={<p className="text-lg font-bold"> Номер телефона </p>} type="text"
+              size="sm"
+              label={<p className="text-sm font-bold"> Номер телефона </p>} type="text"
               labelPlacement={"inside"}
               color={(!isValid) ? "danger" : "default"}
               isInvalid={!isValid}
@@ -112,7 +112,7 @@ export default function Page() {
             <PendingButton className="mt-4"
               type="submit" color="primary"
               fullWidth
-              size="lg"
+              size="sm"
               isDisabled={!isValid}
             >Отправить</PendingButton>
           </form>

@@ -1,129 +1,95 @@
 'use client'
 import { Card, CardHeader, CardBody, Spinner, Spacer, Button, Input, Link } from "@nextui-org/react"
- import { Listbox, ListboxItem } from "@nextui-org/react"
- import { ListboxWrapper } from "./ListboxWrapper"
- import { useRouter, redirect } from 'next/navigation'
- import { useFormState, useFormStatus } from 'react-dom'
- //import { gen10 } from "./generate10"
- import useSWR from 'swr'
- import { useMemo } from "react"
-// import { prisma } from "@/lib/prisma"
-// import { fetcher1 } from "../fetchers"
+import { Listbox, ListboxItem } from "@nextui-org/react"
+import { ListboxWrapper } from "./ListboxWrapper"
+import { useRouter, redirect } from 'next/navigation'
+//import { useFormState, useFormStatus } from 'react-dom'
+import useSWR from 'swr'
+import { useMemo } from "react"
+import { getChecks } from "@/lib/fetchers"
+import { checkClose } from "@/lib/server-actions"
 
-// const fetcher1 = async (url) => {
- 
-//   const checks = await prisma.check.findMany({
-//     skip: url.skip, take: url.take,
-//     orderBy: { createdAt: "desc" },
-//   })
-//   const json_response = {
-//     status: "success",
-//     result: checks,
-//    }
-//   const res = JSON(json_response)
-//   return res
-// }
-
-function gen10() {
-
-  //const c = Date.now()
-  let now=new Date()
-  for (let i = 0; i < 12; i++){
-    let mon = now.getMonth()
-    now.setMonth(--mon)
-    console.log(i.toString(), now.toLocaleDateString())
-  }
+function dte(date) {
+  const str = date.toLocaleString("ru-RU", { month: 'short', year: 'numeric' })
+  const index = str.lastIndexOf('г.')
+  const result = str.substring(0, index)
+  return result
 }
 
-const fetcher = async (url) => {
-  const res = await fetch(url)
-  if (!res.ok) {
-    const error = new Error('An error occurred while fetching the data.')
-    // Attach extra info to the error object.
-    error.info = await res.json()
-    error.status = res.status
-    throw error
-  }
-  const json_resp = await res.json()
-  const checks = json_resp.checks
-  const data = {
-    "checks": checks,
-    "checkClosed": checks[0].closed
-  }
-  return data
-}
+export default function Page() {
 
-export default function Page(){  // Page(props) { 
-
-  const { data, error, isLoading } = useSWR('/api/checks?skip=0&take=12', fetcher)
-   //const { data, error, isLoading } = useSWR('/api/checks', fetcher)
+  const skip = 0
+  const take = 13
+  const { data, mutate, error, isLoading } = useSWR(`/api/checks?skip}=${skip}&take=${take}`, getChecks)
 
   const router = useRouter()
-  const initialState = {
-    message: null,
-  }
-   //const [state, formAction] = useFormState(gen10, initialState)
-  
+
   const listComponent = useMemo(() => {
-    if (isLoading) return (
-      <CardBody>
-        <Spinner size="lg" />
-      </CardBody>
-    )
-    else return (
-      <Listbox
-        items={data?.checks}
-        aria-label="Dynamic Actions"
-        onAction={(key) => alert(key)}
-      >
-        {(item) => (
-          <ListboxItem
-            key={item.id}
-            color={item.key === "delete" ? "danger" : "default"}
-            className={item.key === "delete" ? "text-danger" : ""}
-          >
-            {item.date}
-          </ListboxItem>
-        )}
-      </Listbox>
-    )
-},[isLoading])
-  
-  
-  // if (isLoading)
-  //    return <Card className="modal"><Spinner size="sm" /></Card>
-    return(
-      <Card className="modal">
-        <CardHeader className="flex justify-center">
-          <p className="text-xl font-bold"> Счета </p>
-        </CardHeader>
-        <CardBody>
-          <div className="flex justify-between gap-3 items-end my-4">
+    if (error) return (<p>{error && error.info}</p>)
+    if (isLoading) return (<Spinner size="lg" className='block mx-auto mt-48' />)
+
+    return (
+      <>
+        <div className="flex justify-between gap-3 items-end my-4">
+          {data.checks[0].closed ?
             <Button
-              type="submit" color="primary"
+              color="primary"
               fullWidth
               size="sm"
               isDisabled={isLoading}
-              onClick={() => router.push('/checks/new/?skip=0&take=1')}
+              onClick={() => router.push('/checks/new')}
             > Новый счет </Button>
+            :
+            <Button
+              color="primary"
+              fullWidth
+              size="sm"
+              isDisabled={isLoading}
+              onClick={async () => {
+                await checkClose(data.checks[0])
+                mutate({ ...data, closed: true })
+              }}
+            >Закрыть счет</Button>
+          }
+            
+          <Button
+            color="primary"
+            fullWidth
+            size="sm"
+            isDisabled={isLoading}
+            onClick={() => router.back()}
+          > Назад </Button>
+        </div>
 
-            <form>
-              <Button
-                color="primary"
-                fullWidth
-                size="sm"
-                isDisabled={isLoading}
-                type="submit"
-                formAction={() =>  gen10() }
-                //onClick={gen10()}
-              > Генерировать 10 </Button>
-            </form>
-          </div>
+        <ListboxWrapper>
+          <Listbox
+            className="p-0 gap-0 bg-content1 overflow-visible shadow-small rounded-medium"
+            items={data.checks}
+            onAction={(key) => alert(key)}
+          >
+            {(item) => (
+              <ListboxItem
+                key={item.id}
+                className={item.closed ? "" : "bg-danger"}
+                color={item.closed ? "default" : "danger"}
+              >
+                {dte(new Date(item.date))}
+              </ListboxItem>
+            )}
+          </Listbox>
+        </ListboxWrapper>
+      </>
+    )
+  }, [isLoading, data])
 
-          <ListboxWrapper>
-            {listComponent}
-          </ListboxWrapper>
-
-        </CardBody>
-      </Card>
-)}
+  return (
+    <Card className="modal">
+      <CardHeader className="flex justify-center">
+        <p className="pt-4 text-xl font-bold"> Счета </p>
+      </CardHeader>
+      <CardBody>
+        {listComponent}
+      </CardBody>
+    </Card>
+  )
+}

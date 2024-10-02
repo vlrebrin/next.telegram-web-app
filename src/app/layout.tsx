@@ -6,9 +6,9 @@
 import { Manrope } from 'next/font/google'
 import Providers from './providers'
 import './globals.css'
-import { createUsers } from "@/lib/server-actions"
-import { prisma } from "@/lib/prisma";
-import Menubar from '../components/navbar'
+//import { createUsers } from "@/lib/server-actions"
+//import { prisma } from "@/lib/prisma";
+//import Menubar from '../components/navbar'
 //import { bot } from "./bot"
 const manrope = Manrope({
   subsets: ['latin'],
