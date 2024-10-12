@@ -46,8 +46,8 @@ export default function Page() {
   const [state, formAction] = useFormState(createCheck, initialState)
   const { pending } = useFormStatus()
   const formContent = useMemo(() => {
-     if (state.message === "success")
-       router.push('/checks')
+    if (state.status === "success")
+      router.push('/checks')
     //  return (<p> {state.message} </p>)
 
     if (isLoading)
@@ -122,7 +122,7 @@ export default function Page() {
             type="submit" color="primary"
             fullWidth isDisabled={!isValid}
             size="sm"
-           //onClick={formSubmit}
+          //onClick={formSubmit}
           > {pending ? "Загрузка..." : "Передать"} </Button>
         </form>
         <Spacer y={6} />

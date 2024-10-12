@@ -30,7 +30,31 @@ export async function checkClose(check) {
   return check
 }
 
+export async function checkDelete(checkIdToDelete) {
+  try {
+    const deleteMeterings = prisma.metering.deleteMany({
+      where: { checkId: checkIdToDelete }
+    })
+    const deleteCheck = prisma.check.delete({
+      where: { id: checkIdToDelete },
+    })
+
+    await prisma.$transaction([deleteMeterings, deleteCheck])
+    return {
+      status: "OK",
+      message: "Счет и связаныые с ним показания успешно удалены"
+    }
+  } catch (error) {
+    return {
+      status: "FAULT",
+      message: error.message
+    }
+  }
+}
+
+
 async function createUser(member) {
+
   const user = await prisma.user.create({
     data: {
       name: member.name,
@@ -54,54 +78,6 @@ export async function getUserByPhone(phone, path) {
   return user
 }
 
-
-export async function createCheckAction(data) {
-
-  try {
-    const check = await prisma.check.create({
-      data
-    });
-
-    // const checks = await prisma.check.findMany({
-    //   skip: 0, take: 1, orderBy:{createdAt:"desc"}
-    // })
-
-    // var lastmeterings
-    // if (checks) {
-    //     lastmeterings = await prisma.metering.findMany({
-    //     where:{checkId:checks[0].id}
-    //   })
-    // }
-
-    const users = await prisma.user.findMany({
-      skip: 0, take: 12, orderBy: { name: "asc" }
-    })
-
-    users.map(user => {
-      const boxes = JSON.parse(user.jsondata)
-      boxes.map(async (box) => {
-        const counter = await prisma.metering.create({
-          data: {
-            num: box.num,
-            checkId: check.id,
-            userId: user.id,
-          }
-        })
-        // createMetering({
-        //   data: {
-        //     num: box.num,
-        //     checkId: check.id,
-        //     userId: user.id,
-        //   }
-        // })
-      })
-    })
-  }
-  catch (error) {
-    throw (error)
-  }
-}
-
 export async function getCheck(page) {
   // Заданный счет
   const checks = await prisma.check.findMany({
@@ -111,11 +87,6 @@ export async function getCheck(page) {
   })
   return checks[0]
 }
-export async function lastCheckClosed(){
-  await getCheck(1).closed
-}
-//revalidateTag('lastCheck')
-
 
 async function getMeterings(page, rowPerPage) {
 
@@ -134,26 +105,26 @@ async function getMeterings(page, rowPerPage) {
 
 export async function CalculateMeteringData(page, rowPerPage) {
   // Заданный счет
- const check=await getCheck(page)
-  
+  const check = await getCheck(page)
+
   // Значения текущего счета
-  const currentData=await getMeterings(page, rowPerPage)
-  
+  const currentData = await getMeterings(page, rowPerPage)
+
   // Значения предыдущего счета
   //const prevData = await getMeterings(page + 1, rowPerPage)
-  
+
   const yesValues = currentData.filter((m) => { return !m.isNoValue })
   const summYes = yesValues.reduce((s, a) => { return s + a.intake }, 0)
   const noValues = currentData.filter((m) => { return m.isNoValue })
   const perNoValue = (check.intake - summYes) / noValues.length
-  
-  currentData.map((m,index) => {
+
+  currentData.map((m, index) => {
     if (m.isNoValue) {
       m.intake = Math.round(perNoValue)
-      m.value=-m.intake
+      m.value = -m.intake
     }
   })
-  
+
   const commons = currentData.filter((m) => { return m.isCommon })
   const commonsSumIntakes = commons.reduce((s, a) => { return a.intake }, 0)
   const PerNoCommons = commonsSumIntakes / (currentData.length - commons.length)
@@ -182,8 +153,8 @@ export async function CalculateMeteringData(page, rowPerPage) {
       console.log(e.message)
       throw (e)
     }
-  }) 
-  revalidatePath('/checks') 
+  })
+  revalidatePath('/checks')
 }
 
 
@@ -196,16 +167,16 @@ export async function CalculateMeteringData(page, rowPerPage) {
     случайными для целей имитации работы пользователей
 */
 export async function fillMeteringData(page, rowPerPage) {
-  
+
   // Заданный счет
   const check = await getCheck(page)
-  
+
   // Значения текущего счета
   const currentData = await getMeterings(page, rowPerPage)
-   
+
   // Значения предадущего счета
   const prevData = await getMeterings(page + 1, rowPerPage)
-    
+
   // Исключам из счета значения общих счетчиков
   const counters = currentData.filter((m) => { return !m.isCommon })
   const intakePerPumpe = 48   // Задаем потребление энергии насосом
@@ -216,7 +187,7 @@ export async function fillMeteringData(page, rowPerPage) {
   const avgRnd = rnd.reduce((s, a) => { return s + a }, 0) / counters.length
   const norm = rnd.map((r) => { return (intk / avgRnd) * r })
   //const sumNorm = norm.reduce((s, a) => { return s + a }, 0)
-  
+
   //  Имметация пустых (непереданных )значений
   const nambeFogetet = 3  // количество забытых значений
   const set = new Set([]);  // индексы забытых в currentData
@@ -227,7 +198,7 @@ export async function fillMeteringData(page, rowPerPage) {
     set.add(i)
   }
   console.log(set)
-  
+
   /*
       Используя показания счетчиков из предудущего счета 
       заносим сформированные значени в БД
@@ -236,13 +207,13 @@ export async function fillMeteringData(page, rowPerPage) {
     var intake = 0
     var value = 0
     var isNoValue = true
-    if (!set.has(index)){
+    if (!set.has(index)) {
       if (m.isCommon) intake = intakePerPumpe
       else intake = Math.round(norm.pop())
       value = prevData[index].value + intake
-      isNoValue=false
+      isNoValue = false
     }
-    
+
     const newmenering = await prisma.metering.updateMany({
       where: { id: m.id },
       data: {
@@ -252,15 +223,15 @@ export async function fillMeteringData(page, rowPerPage) {
       }
     })
   })
-  
-    //  Баланс должен соответствовать потреблению,
-    //  представленному а текущем счете за исключением забытых 
-    //  значений
-    const balance = currentData.reduce((s, a) => { return s + a.intake }, 0)
-    console.log(`Баланс = ${balance}`)
-  
-    revalidatePath('/checks')
-  }
+
+  //  Баланс должен соответствовать потреблению,
+  //  представленному а текущем счете за исключением забытых 
+  //  значений
+  const balance = currentData.reduce((s, a) => { return s + a.intake }, 0)
+  console.log(`Баланс = ${balance}`)
+
+  revalidatePath('/checks')
+}
 
 
 

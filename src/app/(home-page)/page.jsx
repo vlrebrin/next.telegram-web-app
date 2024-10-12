@@ -28,61 +28,63 @@ export default function Home() {
   const router = useRouter()
   const { data: session, status } = useSession()
   const [user, setUser] = useState(null)
-  const [isNoAdmin, setNoAdmi] = useState(session?.user.role === "ADMIN" ? false : true)
+  //const [isNoAdmin, setNoAdmi] = useState(session?.user.role === "ADMIN" ? false : true)
   
   const Sessioner = useMemo(() => {
     setUser(session?.user)
-    setNoAdmi(user?.role === "ADMIN" ? false : true)
+    //setNoAdmi(user?.role === "ADMIN" ? false : true)
     return <Session status={status} session={session} /> 
     
-  }, [session])
+  }, [session, status, user?.role])
 
-  const skip = 0
-  const take = 12
+  // const skip = 0
+  // const take = 12
   //const { data, error, isLoading } = useSWR('/api/checks', fetcher)
-  const { data, error, isLoading } = useSWR(`/api/checks?skip=${skip}&take=${take}`, getChecks)
-  const [ lastCheck, setLastCheck ]=useState(null)
+  //const { data, error, isLoading, isValidating } = useSWR(`/api/checks?skip=${skip}&take=${take}`, getChecks)
+  //const [ lastCheck, setLastCheck ]=useState(null)
   
   
   const content = useMemo(() => {
-   //setLastCheck(data)
-    if (isLoading) return(<Spinner size="lg" className='block mx-auto mt-48' />)
-    setLastCheck(data.checks[0])
+    //setLastCheck(data)
+    // if (isValidating) return (<Spinner size="lg" className='block mx-auto mt-48' />)
+    // error ? <div className='block mx-auto mt-48' style={{ color: "red" }}> { error.message }</div> : ''
+    // data?.checks[0] ? setLastCheck(data.checks[0]) : setLastCheck(null)
     return (
       <div>
-      <Spacer y={6} />
-          <Button
-            type="submit" color="primary"
-            fullWidth
-            size="sm"
-            onClick={() => router.push('/checks')}
-          > Счета </Button>
+        <Spacer y={6} />
+        <Button
+          type="submit" color="primary"
+          fullWidth
+          size="sm"
+          onClick={() => router.push('/checks')}
+        > Счета </Button>
 
-        <div hidden={false}>
+        {/* <div hidden={false}> */}
           <Spacer y={6} />
           <Button
             type="submit" color="primary"
-            isDisabled={lastCheck?.checkClosed}
+            //isDisabled={!lastCheck?.checkClosed}
             fullWidth
             size="sm"
           //onClick={() => router.push('/checks/new')}
-          > Внести Показания </Button>
-        </div>
+          > Показания </Button>
+        {/* </div> */}
 
-        <div hidden={isNoAdmin}>
+        {/* <div hidden={isNoAdmin}>
           <Spacer y={6} />
           <Button
             type="submit" color="primary"
-            isDisabled={lastCheck?.checkClosed}
+            isDisabled={!lastCheck?.checkClosed}
             fullWidth
             size="lg"
           //onClick={() => router.push('/checks/new')}
           > Закрыть счет </Button>
-        </div>
+        </div> */}
       </div>
     )
  
-  }, [isLoading])  
+    //}, [isLoading])  
+  })
       
   return (
     <>
