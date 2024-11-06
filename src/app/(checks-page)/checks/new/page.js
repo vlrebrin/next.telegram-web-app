@@ -1,145 +1,99 @@
 'use client'
-//import { prisma } from "@/lib/prisma";
-//import Form, { CheckNotHandled } from "./form"
+
 import useSWR from 'swr'
 import useSWRImmutable from "swr/immutable"
 import { Card, CardHeader, CardBody, Spacer, Button, Input, Spinner, Link } from "@nextui-org/react";
 import { useRouter } from 'next/navigation'
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { useFormState, useFormStatus } from 'react-dom'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, } from 'react'
 import { getChecks } from "@/lib/fetchers"
 import { createCheck } from "./action"
+import Intake from "./intake"
+import Summa from "./summa"
 
-const initialState = { message: null }
+function Spin() {
+  return (<Spinner size="lg" className='block mx-auto mt-52' />)
+}
+
+function Actinstatus(state) {
+  const router = useRouter()
+  if (state.status === 'fault')
+    return (
+      <div className='flex-col justify-items-center my-5'>
+        <p className='mb-5 font-bold'> ОШИБКА ПЕРЕДАЧИ ДАННЫХ</p>
+        <p>{state.message}</p>
+        <Button className='my-5'
+          onClick={() => { router.push('/checks') }}>
+          Ok
+        </Button>
+      </div>
+    )
+  if (state.status === 'success') router.push('/checks')
+}
 
 export default function Page() {
 
   const skip = 0
   const take = 2
-
-  const { data, error, isLoading } = useSWRImmutable(`/api/checks?skip=${skip}&take=${take}`, getChecks)
-
-  // const { data, error, isLoading } = useSWR(`/api/checks?skip=${skip}&take=${take}`, getChecks
-  //   , {
-  //revalidateOnFocus: false,
-  //dedupingInterval: 0,
-  //dedupingInterval: 0,
-  //refreshInterval: 1000
-  // })
-
-  const [value, setValue] = useState()
-  const [summa, setSumma] = useState()
-  const [intake, setIntake] = useState()
+  const { data, error, mutate, isLoading, isValidating } = useSWR(`/api/checks?skip=${skip}&take=${take}`, getChecks, {})
   const router = useRouter()
-  //const pathname = usePathname()
-  //const par=useSearchParams()
+  const [state, formAction] = useFormState(createCheck, { message: null })
+  const { pending } = useFormStatus()
 
-  const {
-    register,
-    setError,
+  const { control, trigger, handleSubmit,
     formState: { errors, isValid },
   } = useForm({
-    mode: "all"   // onChange | onBlur | onSubmit | onTouched | all = 'onSubmit'
+    mode: 'onChange'
   })
 
-  const [state, formAction] = useFormState(createCheck, initialState)
-  const { pending } = useFormStatus()
-  const formContent = useMemo(() => {
-    if (state.status === "success")
-      router.push('/checks')
-    //  return (<p> {state.message} </p>)
+  useEffect(() => {
+    trigger('intake')
+    trigger('summa')
+  }, [])
 
-    if (isLoading)
-      return (<Spinner size="lg" className='block mx-auto mt-52' />)
 
+  const content = useMemo(() => {
+    if (state.status) return Actinstatus(state)
+    if (isValidating) return Spin()
+
+    const check = data.checks[0]
     return (
       <div>
-        < form action={formAction}>
+        < form
+          action={formAction}
+        >
           <Spacer yt={4} />
-          <Input {...register("intake", {
-            // required: {
-            //   value: true,
-            //   message: "Значение счетчик не может быть пустым"
-            // },
-            // min: {
-            //   value: lastValue,
-            //   message: ` Текущее значение не может быть меньше предыдущего ( ${lastValue} )`
-            // },
-            // max: {
-            //   value: 99999,
-            //   message: " Значение не может быть больше 99999"
-            // },
-            valueAsNumber: true
-          })}
-            value={intake}
-            onValueChange={(v) => { setIntake(v) }}
-            color={errors.value ? "danger" : "default"}
-            errorMessage={errors.value ? errors.value.message : ""}
-            variant="faded"
-            size="sm"
-            label={<p className="text-sm font-bold"> Счетчик </p>} type="number"
-            step="1"
-            labelPlacement={"inside"}
-            description={<p className="text-sm font-bold">{`Потребление : ${intake} кВт·час`}</p>}
-            endContent={<p className="text-sm"> кВт·час </p>}
+          <Intake
+            name={"intake"}
+            control={control}
+            lastIntake={check.intake}
           />
-
           <Spacer y={6} />
-          <Input {...register("summa",
-            {
-              // required: {
-              //   value: true,
-              //   message: "Значение сумма не может быть пустым"
-              // },
-              // max: {
-              //   value: 5000,
-              //   message: "Значение не может превышать 5000"
-              // },
-              // min: {
-              //   value: 10,
-              //   message: "Значение должно быть более 10"
-              // },
-              valueAsNumber: true
-            })}
-            color={errors.summa ? "danger" : "default"}
-            errorMessage={errors.summa ? errors.summa.message : ""}
-            label={<p className="text-sm font-bold"> Сумма </p>}
-            size="sm"
-            type="number"
-            step={0.01}
-            labelPlacement={"inside"}
-            variant="faded"
-            //endContent={"руб."}
-            endContent={<p className="text-sm"> руб. </p>}
-            defaultValue={10}
-            value={summa}
-            onValueChange={(v) => { setSumma(v) }}
+          <Summa
+            name={"summa"}
+            control={control}
+            lastSumma={check.summa}
           />
 
           <Spacer y={6} />
           <Button
             type="submit" color="primary"
-            fullWidth isDisabled={!isValid}
+            fullWidth
+            isDisabled={!isValid}
             size="sm"
-          //onClick={formSubmit}
           > {pending ? "Загрузка..." : "Передать"} </Button>
         </form>
         <Spacer y={6} />
         <Button
-          //type="submit"
           color="primary"
           fullWidth
           size="sm"
           onClick={() => router.back()}
-        //onClick={submitForm('/api/checks/create')}
         > Отменить </Button>
-        {/* </CardBody>  */}
       </div>
     )
-  }, [intake, summa, errors, isLoading, state, isValid])
-  //},[state, intake, summa, errors, isLoading, isValid])
-
+  }, [isValidating, isValid, state.status])
 
   return (
     <Card className="modal">
@@ -147,7 +101,7 @@ export default function Page() {
         <p className="pt-4 text-xl font-bold"> Новый счет </p>
       </CardHeader>
       <CardBody >
-        {formContent}
+        {content}
       </CardBody>
     </Card>
   )

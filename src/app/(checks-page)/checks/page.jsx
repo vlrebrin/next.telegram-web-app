@@ -26,7 +26,7 @@ export default function Page() {
   const router = useRouter()
 
   const listComponent = useMemo(() => {
-   //if (error) return (<p>{error && error.info}</p>)
+    //if (error) return (<p>{error && error.info}</p>)
     if (isValidating) return (<Spinner size="lg" className='block mx-auto mt-48' />)
     if (error) return (
       <>
@@ -43,7 +43,7 @@ export default function Page() {
 
     return (
       <>
-        {error ? <div className='block mx-auto mt-48'>{ error.info }</div> : ''}
+        {error ? <div className='block mx-auto mt-48'>{error.info}</div> : ''}
         <div className="flex justify-between gap-3 items-end my-4">
           {data?.checks[0].closed ?
             <Button
@@ -65,7 +65,7 @@ export default function Page() {
               }}
             >Закрыть счет</Button>
           }
-            
+
           <Button
             color="primary"
             fullWidth
@@ -76,7 +76,7 @@ export default function Page() {
         </div>
 
         <ListboxWrapper>
-          { data?.checks ?
+          {data?.checks ?
             <Listbox
               className="p-0 gap-0 bg-content1 overflow-visible shadow-small rounded-medium"
               //color="success"

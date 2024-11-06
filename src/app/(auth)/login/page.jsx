@@ -14,9 +14,9 @@ import { PendingButton } from "@/components/auth.buttons";
 import { useSession } from "next-auth/react"
 //import  { ServerError } from"./error.tsx"
 
-const initialState = {
-  message: null,
-}
+// const initialState = {
+//   message: null,
+// }
 
 export default function Page() {
   const {
@@ -29,7 +29,7 @@ export default function Page() {
   
   //const { data: session, status } = useSession()
   const router = useRouter() 
-  const [state, formAction] = useFormState(logIn, initialState)
+  const [state, formAction] = useFormState(logIn, {message: null})
   const [phone, setPhone] = useState("+7");
   
   useEffect(() => {
