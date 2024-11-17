@@ -13,10 +13,10 @@ export default function Intake({ control, name, lastIntake }) {
         value: true,
         message: " Не может быть пустым"
       },
-      min: {
-        value: `${lastIntake}`,
-        message: `Должно быть более ${lastIntake}`
-      },
+      // min: {
+      //   value: `${lastIntake}`,
+      //   message: `Должно быть более ${lastIntake}`
+      // },
       max: {
         value:
           999999,
@@ -34,7 +34,7 @@ export default function Intake({ control, name, lastIntake }) {
       value={field.value}
       onBlur={field.onBlur}
       baseRef={field.ref}
-      
+
       color={error ? "danger" : "default"}
       errorMessage={error ? <p className="text-sm font-bold">{error.message}</p> : ""}
       variant="faded"
@@ -44,7 +44,11 @@ export default function Intake({ control, name, lastIntake }) {
       //step="1"
       labelPlacement={"inside"}
       description={
-        <p className="text-sm font-bold">{`Предыдущее значение: ${lastIntake} кВт·час`}</p>}
+        !lastIntake ?
+          <p className="text-sm font-bold">{'Предыдущее значение не определено'} </p> :
+          <p className="text-sm font-bold">{`Предыдущее значение: ${lastIntake} кВт·час`}</p>
+      }  
+      
       endContent={<p className="text-sm"> кВт·час </p>}
     />
   )

@@ -9,13 +9,13 @@ export const getChecks = async (url) => {
     throw error
   }
   const res=await json_res.json() // извлекаем из json
-  if (!res.checks.length) {
-    const error = new Error('В системе нет ни одного счета')
-    error.info = 'В выборке нет ни одного счета'
-    error.status = "No Checks"
-    throw error
-   // return error
-  }
+  // if (!res.checks.length) {
+  //   const error = new Error('В системе нет ни одного счета')
+  //   error.info = 'В выборке нет ни одного счета'
+  //   error.status = "No Checks"
+  //   throw error
+  //  // return error
+  // }
    //const json_resp = await res.json()
    const status = res.status
    const data = {

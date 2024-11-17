@@ -41,8 +41,8 @@ export default function Page() {
   const [state, formAction] = useFormState(createCheck, { message: null })
   const { pending } = useFormStatus()
 
-  const { control, trigger, handleSubmit,
-    formState: { errors, isValid },
+  const {
+    control, trigger, formState: { errors, isValid },
   } = useForm({
     mode: 'onChange'
   })
@@ -67,13 +67,13 @@ export default function Page() {
           <Intake
             name={"intake"}
             control={control}
-            lastIntake={check.intake}
+            lastIntake={check?.intake}
           />
           <Spacer y={6} />
           <Summa
             name={"summa"}
             control={control}
-            lastSumma={check.summa}
+            lastSumma={check?.summa}
           />
 
           <Spacer y={6} />

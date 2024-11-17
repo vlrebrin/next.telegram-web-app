@@ -12,16 +12,16 @@ import { Session } from "@/components/session"
 import { Loader } from "@/components/loader"
 import { getChecks } from "@/lib/fetchers"
 
-const fetcher = async (url) => {
-  const res = await fetch(url)
-  const json_resp = await res.json()
-  const checks = json_resp.checks
-  const data = {
-    "checks": checks,
-    "checkClosed": checks[0].closed
-  }
-  return data
-}
+// const fetcher = async (url) => {
+//   const res = await fetch(url)
+//   const json_resp = await res.json()
+//   const checks = json_resp.checks
+//   const data = {
+//     "checks": checks,
+//     "checkClosed": checks[0].closed
+//   }
+//   return data
+// }
 
 export default function Home() {
   
@@ -29,26 +29,33 @@ export default function Home() {
   const { data: session, status } = useSession()
   const [user, setUser] = useState(null)
   //const [isNoAdmin, setNoAdmi] = useState(session?.user.role === "ADMIN" ? false : true)
+
+  const skip = 0
+  const take = 1
+  const { data, mutate, error, isLoading, isValidating } = useSWR(`/api/checks?skip}=${skip}&take=${take}`, getChecks)
+ 
+
   
   const Sessioner = useMemo(() => {
     setUser(session?.user)
     //setNoAdmi(user?.role === "ADMIN" ? false : true)
     return <Session status={status} session={session} /> 
-    
   }, [session, status, user?.role])
 
-  // const skip = 0
-  // const take = 12
-  //const { data, error, isLoading } = useSWR('/api/checks', fetcher)
-  //const { data, error, isLoading, isValidating } = useSWR(`/api/checks?skip=${skip}&take=${take}`, getChecks)
-  //const [ lastCheck, setLastCheck ]=useState(null)
-  
-  
   const content = useMemo(() => {
-    //setLastCheck(data)
-    // if (isValidating) return (<Spinner size="lg" className='block mx-auto mt-48' />)
-    // error ? <div className='block mx-auto mt-48' style={{ color: "red" }}> { error.message }</div> : ''
-    // data?.checks[0] ? setLastCheck(data.checks[0]) : setLastCheck(null)
+    if (isValidating) return (<Spinner size="lg" className='block mx-auto mt-48' />)
+    if (error) return (
+      <>
+        <p className='h-12 mx-auto'> {error.message}</p>
+        {/* <Button
+          color="primary"
+          fullWidth
+          size="sm"
+          isDisabled={isLoading}
+          onClick={() => router.push('/checks/new')}
+        > Новый счет </Button> */}
+      </>
+    )
     return (
       <div>
         <Spacer y={6} />
@@ -84,7 +91,7 @@ export default function Home() {
     )
  
     //}, [isLoading])  
-  })
+  }, [isLoading, isValidating, data])
       
   return (
     <>

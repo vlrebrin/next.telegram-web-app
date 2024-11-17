@@ -41,7 +41,10 @@ export default function Summa({ control, name, lastSumma }) {
       type="number"
       labelPlacement={"inside"}
       description={
-        <p className="text-sm font-bold">{`Предыдущее значение: ${lastSumma} руб.`}</p>}
+        !lastSumma ?
+          <p className="text-sm font-bold">{`Предыдущее значение не определено`}</p> :
+          <p className="text-sm font-bold">{`Предыдущее значение: ${lastSumma} руб.`}</p>
+      }
       endContent={<p className="text-sm"> руб. </p>}
     />
   )
