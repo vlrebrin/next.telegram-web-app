@@ -1,7 +1,7 @@
 'use client'
 //import { revalidatePath } from "next/cache";
 //import { title } from "process";
-import { useState, useEffect,useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 //import { useTransition } from "react";
 import { useForm } from "react-hook-form"
 import { signIn } from "@/auth"
@@ -23,19 +23,20 @@ export default function Page() {
     register,
     formState: { errors, isValid },
     setError,
-     trigger,
+    trigger,
   } = useForm({
-    mode: "all",}) // onChange | onBlur | onSubmit | onTouched | all = 'onSubmit'
-  
+    mode: "all",
+  }) // onChange | onBlur | onSubmit | onTouched | all = 'onSubmit'
+
   //const { data: session, status } = useSession()
-  const router = useRouter() 
-  const [state, formAction] = useFormState(logIn, {message: null})
+  const router = useRouter()
+  const [state, formAction] = useFormState(logIn, { message: null })
   const [phone, setPhone] = useState("+7");
-  
+
   useEffect(() => {
     trigger("phone")
   }, [])
-  
+
   useEffect(() => {
     if (state.message !== null) {
       setError("phone", {
@@ -58,10 +59,10 @@ export default function Page() {
 
     value =
       (cardValue[1] ? `${cardValue[1]}` : '').concat(
-      cardValue[2] ? ` ( ${cardValue[2]}` : '').concat(
-      cardValue[3] ? ` ) ${cardValue[3]}` : '').concat(
-      cardValue[4] ? ` - ${cardValue[4]}` : '').concat(
-      cardValue[5] ? ` - ${cardValue[5]}` : '')
+        cardValue[2] ? ` ( ${cardValue[2]}` : '').concat(
+          cardValue[3] ? ` ) ${cardValue[3]}` : '').concat(
+            cardValue[4] ? ` - ${cardValue[4]}` : '').concat(
+              cardValue[5] ? ` - ${cardValue[5]}` : '')
 
     setPhone(value);
   };
@@ -74,20 +75,19 @@ export default function Page() {
           {/* <Spacer yt={8} /> */}
           <div className="border-none bg-transparent mt-6 h-20">
             <SessionAvatar />
-            {/* <Avatar session={session}/> */}
           </div>
         </CardHeader>
         <CardBody >
           <form action={formAction}>
 
             <Input  {...register("phone", {
-                        
-              validate: (value, formValues) => {
-                const rest = 12 - value.replace(/[^\d|\+]/g, '').length
-                return ( !(rest <= 10 && rest > 0) || `Осталось ввести ${rest} цифр`)
-              },
-                
-            })}
+
+                validate: (value, formValues) => {
+                  const rest = 12 - value.replace(/[^\d|\+]/g, '').length
+                  return (!(rest <= 10 && rest > 0) || `Осталось ввести ${rest} цифр`)
+                },
+
+              })}
               value={phone}
               onValueChange={handleChange}
               variant="faded"
@@ -102,7 +102,7 @@ export default function Page() {
               //   <div className="h-6">
               //     <p className="font-bold">{session?.user?.name}</p>
               //   </div> : null}
-              
+
               errorMessage={errors?.phone ?
                 <div className="h-6">
                   <p className="font-bold">{errors?.phone?.message}</p>

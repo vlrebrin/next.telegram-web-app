@@ -14,7 +14,8 @@ export function Session(props) {
   return <>
     <h1>Client Session</h1>
     {/* <pre>{JSON.stringify(props.session?.user.role)}</pre> */}
-    <pre>{JSON.stringify(props.session?.user.role)}</pre>
+    <pre>{JSON.stringify(props.session?.user.name)}</pre>
+
   </>
 }
 

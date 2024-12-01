@@ -1,15 +1,8 @@
-//"use client";
+"use client";
 import { Button } from "@nextui-org/button";
-import { color } from "framer-motion";
- import { signIn, signOut } from "next-auth/react";
-import { Content } from "next/font/google";
-//import { signIn, signOut }  from "@/auth";
+import { signIn, signOut } from "next-auth/react";
 import { useRouter } from 'next/navigation'
 import { useFormStatus } from "react-dom"
-//import Link from "next/link";
-
-
-
 
 export const LoginButton = () => {
   return (
@@ -24,7 +17,6 @@ export const LoginButton = () => {
   );
 };
 
-
 export const RegisterButton = () => {
   const router = useRouter()
   return (
@@ -38,14 +30,6 @@ export const RegisterButton = () => {
   );
 };
 
-// export const RegisterButton = () => {
-//   return (
-//     <Link href="/register" style={{ marginRight: 10 }}>
-//       Register
-//     </Link>
-//   );
-// };
-
 export const LogoutButton = () => {
   return (
     <Button onClick={() => signOut()}
@@ -57,10 +41,6 @@ export const LogoutButton = () => {
     </Button>
   );
 };
-
-// export const ProfileButton = () => {
-//   return <Link href="/profile">Profile</Link>;
-// };
 
 export const ProfileButton = () => {
   const router = useRouter()

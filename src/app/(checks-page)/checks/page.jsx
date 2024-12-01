@@ -3,23 +3,22 @@ import { Card, CardHeader, CardBody, Spinner, Spacer, Button, Input, Link } from
 import { Listbox, ListboxItem } from "@nextui-org/react"
 import { ListboxWrapper } from "./ListboxWrapper"
 import { useRouter, redirect } from 'next/navigation'
-import useSWR from 'swr'
+import useSWR, {useSWRConfig} from 'swr'
 import { useMemo } from "react"
 import { checkClose, checkDelete } from "@/lib/server-actions"
 import { getChecks } from "@/lib/fetchers"
 import { MaterialSymbolsLightDeleteOutline } from "@/icons/MaterialSymbolsLightDeleteOutline"
+import { useState } from 'react'
+import { formatedate } from '@/lib/clientHelpers'
 
-function dte(date) {
-  const str = date.toLocaleString("ru-RU", { month: 'short', year: 'numeric' })
-  const index = str.lastIndexOf('г.')
-  const result = str.substring(0, index)
-  return result
-}
+
 
 export default function Page() {
+
   const skip = 0
   const take = 13
-  const { data, mutate, error, isLoading, isValidating } = useSWR(`/api/checks?skip}=${skip}&take=${take}`, getChecks)
+  const [swrKey, setKey] = useState(`/api/checks?skip=${skip}&take=${take}`)
+  const { data, mutate, error, isLoading, isValidating } = useSWR(swrKey, getChecks)
   const router = useRouter()
 
   const listComponent = useMemo(() => {
@@ -75,7 +74,7 @@ export default function Page() {
               className="p-0 gap-0 bg-content1 overflow-visible shadow-small rounded-medium"
               items={data.checks}
               onAction={(key) => alert(key)}>
-                {(item) => (CheckItem(item))}
+                {(item) => (CheckItem(item, swrKey))}
             </Listbox>
             : <p className="text-center mt-14">В системе нет ни одного счета </p>
           }
@@ -96,7 +95,8 @@ export default function Page() {
   )
 }
 
-function CheckItem(item) {
+function CheckItem(item, key) {
+  const { mutate } = useSWRConfig()
   if (!item.closed)
     return (
       <ListboxItem
@@ -105,20 +105,21 @@ function CheckItem(item) {
         endContent={<Button
           onClick={async () => {
             const result = await checkDelete(item.id)
-            //mutate({ ...data, deleted: true })
+            mutate(key) 
+            //mutate("/api/checks") тоже работает!
           }}
           isIconOnly
           size="sm"
         > <MaterialSymbolsLightDeleteOutline width={20} height={20} /> </Button>}
        >
-        {dte(new Date(item.date))}
+        {formatedate(new Date(item.date))}
       </ListboxItem>
  
     )
   return (
     <ListboxItem>
       <div class="flex flex-row">
-        <div className='basis-1/4'> {dte(new Date(item.date))}</div>
+        <div className='basis-1/4'> { formatedate(new Date(item.date))}</div>
         <div className='basis-1/4'> {new Intl.NumberFormat("ru").format(item.intake) + " кВт·ч"} </div>
         <div className='basis-1/4'> {new Intl.NumberFormat("ru", { style: "currency", currency: "RUB" }).format(item.summa)} </div>
         <div className='basis-1/4'> {new Intl.NumberFormat("ru", { style: "decimal", minimumFractionDigits: 3 },).format(item.summa / item.intake) + " р/кВт·ч"}</div>
