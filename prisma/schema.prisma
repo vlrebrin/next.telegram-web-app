@@ -8,25 +8,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id          Int       @id @default(autoincrement())
-  tg_id       Int       @default(0)
-  name        String    @unique
-  phone       String    @default("")
-  role        Role      @default(USER)
-  isRegistred Boolean   @default(false)
-  counters    Counter[]
-}
-
-model Counter {
-  id       Int        @id @default(autoincrement())
-  name     String     @unique
-  isCommon Boolean    @default(false)
-  userId   Int
-  user     User       @relation(fields: [userId], references: [id])
-  Metering Metering[]
-}
-
 model Check {
   id        Int        @id @default(autoincrement())
   summa     Float      @default(12000.2)
@@ -35,6 +16,25 @@ model Check {
   createdAt DateTime   @default(now())
   date      DateTime   @default(now())
   meterings Metering[]
+}
+
+model Counter {
+  id        Int        @id @default(autoincrement())
+  isCommon  Boolean    @default(false)
+  userId    Int
+  num       String     @unique
+  User      User       @relation(fields: [userId], references: [id])
+  meterings Metering[]
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  tg_id       Int       @default(0)
+  name        String    @unique
+  phone       String    @default("")
+  role        Role      @default(USER)
+  isRegistred Boolean   @default(false)
+  counters    Counter[]
 }
 
 model Metering {
@@ -48,8 +48,15 @@ model Metering {
   isCommon     Boolean  @default(false)
   checkId      Int
   counterId    Int
-  check        Check    @relation(fields: [checkId], references: [id])
-  counter      Counter  @relation(fields: [counterId], references: [id])
+  Check        Check    @relation(fields: [checkId], references: [id])
+  Counter      Counter  @relation(fields: [counterId], references: [id])
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view CounterInfo {
+  id   Int     @unique
+  num  String?
+  name String?
 }
 
 enum Role {
