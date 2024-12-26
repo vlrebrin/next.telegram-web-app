@@ -30,8 +30,11 @@ export default function Page() {
   const [userId, setUserId] = useState();
   const [checkId, setCheckId] = useState();
   const [swrKey, setKey] = useState('/api/meterings' + makeUrl(userId, checkId))
-
   const { data, mutate, error, isLoading, isValidating } = useSWR(swrKey, getMeterings)
+  
+  useEffect(() => {
+    setKey('/api/meterings' + makeUrl(userId, checkId))
+  }, [userId, checkId])
   
   const listComponent = useMemo(() => {
     
