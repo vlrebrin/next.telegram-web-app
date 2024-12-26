@@ -11,7 +11,10 @@ const members = [
       { num: "34-26" },
       { num: "30" },
       { num: "40" },
-      { num: "pumpe" }
+      {
+        num: "pumpe",
+        isCommon: true
+       }
     ]
   },
 

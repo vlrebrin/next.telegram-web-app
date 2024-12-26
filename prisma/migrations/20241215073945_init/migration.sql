@@ -2,28 +2,6 @@
 CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN', 'GUEST');
 
 -- CreateTable
-CREATE TABLE "User" (
-    "id" SERIAL NOT NULL,
-    "tg_id" INTEGER NOT NULL DEFAULT 0,
-    "name" TEXT NOT NULL,
-    "phone" TEXT NOT NULL DEFAULT '',
-    "role" "Role" NOT NULL DEFAULT 'USER',
-    "isRegistred" BOOLEAN NOT NULL DEFAULT false,
-
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Counter" (
-    "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
-    "isCommon" BOOLEAN NOT NULL DEFAULT false,
-    "userId" INTEGER NOT NULL,
-
-    CONSTRAINT "Counter_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Check" (
     "id" SERIAL NOT NULL,
     "summa" DOUBLE PRECISION NOT NULL DEFAULT 12000.2,
@@ -36,15 +14,35 @@ CREATE TABLE "Check" (
 );
 
 -- CreateTable
+CREATE TABLE "Counter" (
+    "id" SERIAL NOT NULL,
+    "isCommon" BOOLEAN NOT NULL DEFAULT false,
+    "userId" INTEGER NOT NULL,
+    "num" TEXT NOT NULL,
+
+    CONSTRAINT "Counter_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "tg_id" INTEGER NOT NULL DEFAULT 0,
+    "name" TEXT NOT NULL,
+    "phone" TEXT NOT NULL DEFAULT '',
+    "role" "Role" NOT NULL DEFAULT 'USER',
+    "isRegistred" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Metering" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "value" INTEGER NOT NULL DEFAULT 0,
-    "intake" INTEGER NOT NULL DEFAULT 0,
     "payment" DOUBLE PRECISION NOT NULL DEFAULT 0.0,
     "contribution" DOUBLE PRECISION NOT NULL DEFAULT 0.0,
     "isNoValue" BOOLEAN NOT NULL DEFAULT true,
-    "isCommon" BOOLEAN NOT NULL DEFAULT false,
     "checkId" INTEGER NOT NULL,
     "counterId" INTEGER NOT NULL,
 
@@ -52,10 +50,10 @@ CREATE TABLE "Metering" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_name_key" ON "User"("name");
+CREATE UNIQUE INDEX "Counter_num_key" ON "Counter"("num");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Counter_name_key" ON "Counter"("name");
+CREATE UNIQUE INDEX "User_name_key" ON "User"("name");
 
 -- AddForeignKey
 ALTER TABLE "Counter" ADD CONSTRAINT "Counter_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -41,11 +41,9 @@ model Metering {
   id           Int      @id @default(autoincrement())
   createdAt    DateTime @default(now())
   value        Int      @default(0)
-  intake       Int      @default(0)
   payment      Float    @default(0.0)
   contribution Float    @default(0.0)
   isNoValue    Boolean  @default(true)
-  isCommon     Boolean  @default(false)
   checkId      Int
   counterId    Int
   Check        Check    @relation(fields: [checkId], references: [id])
@@ -53,11 +51,22 @@ model Metering {
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-view CounterInfo {
-  id   Int     @unique
-  num  String?
-  name String?
-}
+// view CounterInfo {
+//   id   Int     @unique
+//   num  String?
+//   name String?
+// }
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+// view MeteringView {
+//   date    DateTime?
+//   summa   Float?
+//   intake  Int?
+//   num     String?
+//   id      Int       @unique
+//   value   Int?
+//   payment Float?
+// }
 
 enum Role {
   USER

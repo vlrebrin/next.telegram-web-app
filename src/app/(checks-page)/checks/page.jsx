@@ -1,7 +1,7 @@
 'use client'
 import { Card, CardHeader, CardBody, Spinner, Spacer, Button, Input, Link } from "@nextui-org/react"
 import { Listbox, ListboxItem } from "@nextui-org/react"
-import { ListboxWrapper } from "./ListboxWrapper"
+import { ListboxWrapper } from "@/components/ListboxWrapper"
 import { useRouter, redirect } from 'next/navigation'
 import useSWR, {useSWRConfig} from 'swr'
 import { useMemo } from "react"
@@ -24,16 +24,7 @@ export default function Page() {
   const listComponent = useMemo(() => {
     if (isValidating) return (<Spinner size="lg" className='block mx-auto mt-48' />)
     if (error) return (
-      <>
-        <p className='h-12 mx-auto'> {error.message}</p>
-        {/* <Button
-          color="primary"
-          fullWidth
-          size="sm"
-          isDisabled={isLoading}
-          //onClick={() => router.push('/checks/new')}
-        > Новый счет </Button> */}
-      </>
+      <> <p className='h-12 mx-auto'> {error.message}</p> </>
     )
    
     return (
@@ -73,7 +64,8 @@ export default function Page() {
             <Listbox
               className="p-0 gap-0 bg-content1 overflow-visible shadow-small rounded-medium"
               items={data.checks}
-              onAction={(key) => alert(key)}>
+              onAction={(key) => alert(key)}
+            >
                 {(item) => (CheckItem(item, swrKey))}
             </Listbox>
             : <p className="text-center mt-14">В системе нет ни одного счета </p>
@@ -114,8 +106,7 @@ function CheckItem(item, key) {
        >
         {formatedate(new Date(item.date))}
       </ListboxItem>
- 
-    )
+     )
   return (
     <ListboxItem>
       <div class="flex flex-row">

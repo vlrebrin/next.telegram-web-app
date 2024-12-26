@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 //import SelectCheck, { CheckIsEmpty } from "./components/selectcheck"
-import TableCounters,{ CheckIsEmpty } from "./tablecounters"
+import TableCounters,{ CheckIsEmpty } from "./table-counters"
 
 export default async function Page() {
 
